@@ -15,14 +15,14 @@ public class TgTransport implements ITransport {
     // Но мы оба знали. Хоть бой и закончен, но это лишь начало войны. Жестокой. Но неизбежной.
     TelegramBot bot;
 
-    private final Map<String, Function<EventContext, EventContext>> handlers = new LinkedHashMap<>();
+    private final Map<String, ContextHandler> handlers = new LinkedHashMap<>();
     private boolean isBotStarted = false;
 
     public TgTransport(String TOKEN) {
         bot = new TelegramBot(TOKEN);
     }
 
-    public ITransport addContextHandler(String handlerId, Function<EventContext, EventContext> handler) {
+    public ITransport addContextHandler(String handlerId, ContextHandler handler) {
         if (isBotStarted)
             throw new RuntimeException("Adding handlers after bot start is not allowed");
 
@@ -34,14 +34,14 @@ public class TgTransport implements ITransport {
         if (isBotStarted)
             throw new RuntimeException("Removing handlers after bot start is not allowed");
 
-        return this;
+        // Not implemented, method is probably useless
+        throw new RuntimeException("removeContextHandler is not implemented");
+
+        //return this;
     }
 
-    public ITransport addCommandHandler(String commandText, Function<EventContext, EventContext> handler) {
+    public ITransport addCommandHandler(String commandText, ContextHandler handler) {
         return addContextHandler(commandText, ctx -> {
-            //System.out.println("!!!");
-            //System.out.println(ctx.newMessage.getMessageText().equals(commandText));
-
             if (ctx.newMessage.getMessageText().equals(commandText)) {
                 return handler.apply(ctx);
             }
@@ -61,18 +61,16 @@ public class TgTransport implements ITransport {
         isBotStarted = true;
 
         // COMPOSE HANDLERS
-        Function<EventContext, EventContext> complexHandler = ctx -> ctx;
+        ContextHandler complexHandler = ctx -> ctx;
         for (String handlerName: handlers.keySet()) {
-            System.out.println(handlerName);
-            complexHandler = handlers.get(handlerName).compose(complexHandler);
+            complexHandler = (ContextHandler) handlers.get(handlerName).compose(complexHandler);
         }
-        Function<EventContext, EventContext> finalHandler = complexHandler;
+        var finalHandler = complexHandler;
 
         // INIT BOT
         System.out.println("BOT STARTED!");
         bot.setUpdatesListener(updateList -> {
             updateList.forEach(update -> finalHandler.apply(new EventContext(this, update)));
-            //updateList.forEach(System.out::println);
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
 
