@@ -1,5 +1,8 @@
-package com.gosanon.javabot_example.transports;
+package com.gosanon.javabot_example.transports.implementations;
 
+import com.gosanon.javabot_example.transports.ContextHandler;
+import com.gosanon.javabot_example.transports.EventContext;
+import com.gosanon.javabot_example.transports.ITransport;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.SendMessage;

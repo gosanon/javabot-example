@@ -1,9 +1,6 @@
 package com.gosanon.javabot_example.transports;
 
-import java.util.function.Function;
-
 public interface ITransport {
-    //void sendMessage (int targetChatId, String messageText); // targetChatId breaks the abstraction
     ITransport addContextHandler(String handlerId, ContextHandler handler);
     ITransport removeContextHandler(String handlerId);
 

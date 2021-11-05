@@ -8,10 +8,11 @@ public class EventContext {
 
     private boolean alreadyReplied;
 
-    <T> EventContext(ITransport _transport, T ctx) {
+    public <T> EventContext(ITransport _transport, T ctx) {
         if (ctx instanceof com.pengrad.telegrambot.model.Update) {
-            String newMessageText = ((Update) ctx).message().text();
-            String newMessageSenderId = ((Update) ctx).message().from().id().toString();
+            var updateObject = (Update) ctx;
+            String newMessageText = updateObject.message().text();
+            String newMessageSenderId = updateObject.message().from().id().toString();
 
             newMessage = new NewMessage(newMessageText, newMessageSenderId);
             transport = _transport;

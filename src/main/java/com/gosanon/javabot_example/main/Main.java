@@ -1,7 +1,7 @@
 package com.gosanon.javabot_example.main;
 
 import com.gosanon.javabot_example.transports.ITransport;
-import com.gosanon.javabot_example.transports.TgTransport;
+import com.gosanon.javabot_example.transports.implementations.TgTransport;
 
 public class Main {
     public static void main(String[] args) {
