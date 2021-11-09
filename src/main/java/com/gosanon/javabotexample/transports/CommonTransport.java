@@ -7,6 +7,7 @@ import java.util.Map;
 public abstract class CommonTransport implements ITransport {
     private final Map<String, ContextHandler> handlers = new LinkedHashMap<>();
     private boolean isBotStarted = false;
+    protected ContextHandler finalHandler;
 
     public ITransport addContextHandler(String handlerId, ContextHandler handler) {
         if (isBotStarted)
@@ -39,7 +40,7 @@ public abstract class CommonTransport implements ITransport {
         for (String handlerName: handlers.keySet()) {
             complexHandler = handlers.get(handlerName).compose(complexHandler)::apply;
         }
-        var finalHandler = complexHandler;
+        finalHandler = complexHandler;
 
         // INIT BOT
         initBot(finalHandler);
