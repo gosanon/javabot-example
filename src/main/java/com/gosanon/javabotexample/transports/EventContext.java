@@ -8,15 +8,9 @@ public class EventContext {
 
     private boolean alreadyReplied;
 
-    public <T> EventContext(ITransport _transport, T ctx) {
-        if (ctx instanceof com.pengrad.telegrambot.model.Update) {
-            var updateObject = (Update) ctx;
-            String newMessageText = updateObject.message().text();
-            String newMessageSenderId = updateObject.message().from().id().toString();
-
-            newMessage = new NewMessage(newMessageText, newMessageSenderId);
-            transport = _transport;
-        }
+    public EventContext(ITransport transport, String newMessageText, String newMessageSenderId) {
+        this.newMessage = new NewMessage(newMessageText, newMessageSenderId);
+        this.transport = transport;
     }
 
     public EventContext reply(String replyMessage) {
