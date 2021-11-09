@@ -1,8 +1,8 @@
-package com.gosanon.javabot_example.transports;
+package com.gosanon.javabotexample.transports;
 
 public class NewMessage {
-    private String messageText;
-    private String senderId;
+    private final String messageText;
+    private final String senderId;
 
     NewMessage(String _messageText, String _senderId) {
         messageText = _messageText;

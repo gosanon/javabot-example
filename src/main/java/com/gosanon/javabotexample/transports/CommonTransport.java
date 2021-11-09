@@ -1,29 +1,12 @@
-package com.gosanon.javabot_example.transports.implementations;
+package com.gosanon.javabotexample.transports;
 
-import com.gosanon.javabot_example.transports.ContextHandler;
-import com.gosanon.javabot_example.transports.EventContext;
-import com.gosanon.javabot_example.transports.ITransport;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.request.SendMessage;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Function;
 
-import static java.lang.Integer.parseInt;
-
-public class TgTransport implements ITransport {
-    // На рамке монитора виднелись красные капли вишнёвого сока. Джава проиграла сегодня.
-    // Но мы оба знали. Хоть бой и закончен, но это лишь начало войны. Жестокой. Но неизбежной.
-    TelegramBot bot;
-
+public abstract class CommonTransport implements ITransport {
     private final Map<String, ContextHandler> handlers = new LinkedHashMap<>();
     private boolean isBotStarted = false;
-
-    public TgTransport(String TOKEN) {
-        bot = new TelegramBot(TOKEN);
-    }
 
     public ITransport addContextHandler(String handlerId, ContextHandler handler) {
         if (isBotStarted)
@@ -57,6 +40,8 @@ public class TgTransport implements ITransport {
         return removeContextHandler(commandText);
     }
 
+    abstract protected void initBot(ContextHandler finalHandler);
+
     public ITransport startBot() {
         if (isBotStarted)
             throw new RuntimeException("Calling startBot() after bot start is not allowed");
@@ -66,21 +51,15 @@ public class TgTransport implements ITransport {
         // COMPOSE HANDLERS
         ContextHandler complexHandler = ctx -> ctx;
         for (String handlerName: handlers.keySet()) {
-            complexHandler = (ContextHandler) handlers.get(handlerName).compose(complexHandler);
+            complexHandler = handlers.get(handlerName).compose(complexHandler)::apply;
         }
         var finalHandler = complexHandler;
 
         // INIT BOT
-        System.out.println("BOT STARTED!");
-        bot.setUpdatesListener(updateList -> {
-            updateList.forEach(update -> finalHandler.apply(new EventContext(this, update)));
-            return UpdatesListener.CONFIRMED_UPDATES_ALL;
-        });
+        initBot(finalHandler);
 
         return this;
     }
 
-    public void sendMessage(String targetId, String messageText) {
-        bot.execute(new SendMessage(parseInt(targetId), messageText));
-    }
+    public void sendMessage(String targetId, String messageText) {}
 }

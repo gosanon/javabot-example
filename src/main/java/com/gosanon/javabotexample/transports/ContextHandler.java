@@ -1,4 +1,4 @@
-package com.gosanon.javabot_example.transports;
+package com.gosanon.javabotexample.transports;
 
 import java.util.function.Function;
 

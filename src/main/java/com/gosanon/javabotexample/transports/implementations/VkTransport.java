@@ -1,4 +1,4 @@
-package com.gosanon.javabot_example.transports.implementations;
+package com.gosanon.javabotexample.transports.implementations;
 
 public class VkTransport {
     VkTransport (String TOKEN) {

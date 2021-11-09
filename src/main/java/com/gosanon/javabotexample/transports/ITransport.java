@@ -1,4 +1,4 @@
-package com.gosanon.javabot_example.transports;
+package com.gosanon.javabotexample.transports;
 
 public interface ITransport {
     ITransport addContextHandler(String handlerId, ContextHandler handler);
