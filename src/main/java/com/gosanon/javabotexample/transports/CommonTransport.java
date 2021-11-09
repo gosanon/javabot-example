@@ -47,5 +47,5 @@ public abstract class CommonTransport implements ITransport {
         return this;
     }
 
-    public void sendMessage(String targetId, String messageText) {}
+    abstract public void sendMessage(String targetId, String messageText);
 }
