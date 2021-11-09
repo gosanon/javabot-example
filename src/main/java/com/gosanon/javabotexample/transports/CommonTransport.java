@@ -16,16 +16,6 @@ public abstract class CommonTransport implements ITransport {
         return this;
     }
 
-    public ITransport removeContextHandler(String handlerId) {
-        if (isBotStarted)
-            throw new RuntimeException("Removing handlers after bot start is not allowed");
-
-        // Not implemented, method is probably useless
-        throw new RuntimeException("removeContextHandler is not implemented");
-
-        //return this;
-    }
-
     public ITransport addCommandHandler(String commandText, ContextHandler handler) {
         return addContextHandler(commandText, ctx -> {
             if (ctx.newMessage.getMessageText().equals(commandText)) {
@@ -34,10 +24,6 @@ public abstract class CommonTransport implements ITransport {
 
             return ctx;
         });
-    }
-
-    public ITransport removeCommandHandler(String commandText) {
-        return removeContextHandler(commandText);
     }
 
     abstract protected void initBot(ContextHandler finalHandler);
