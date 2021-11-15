@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 
 class CommonTransportTest {
 
@@ -38,4 +40,13 @@ class CommonTransportTest {
             new String[]{"123", "ты кто такой?"});
     }
 
+    @Test
+    public void testDoubleStart(){
+        try {
+            simpleTestBot.startBot();
+            fail("Exception not thrown");
+        } catch (RuntimeException e) {
+            assertEquals("Calling startBot() after bot start is not allowed", e.getMessage());
+        }
+    }
 }
