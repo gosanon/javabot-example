@@ -22,3 +22,6 @@ test {
 }
 
 compileJava.options.encoding = 'UTF-8'
+
+apply plugin: 'application'
+mainClassName = 'com.gosanon.javabotexample.main.Main'
