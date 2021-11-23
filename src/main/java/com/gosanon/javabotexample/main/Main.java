@@ -28,7 +28,7 @@ public class Main {
             )
 
             .startBot();*/
-        var a = new Questions(3);
-        var b = a.nextQuestion().Value;
+        var a = Questions.nextQuestion();
+        System.out.println("abc");
     }
 }
