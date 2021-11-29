@@ -1,6 +1,6 @@
-package com.gosanon.javabotexample.transports;
+package com.gosanon.javabotexample.api.transports.context;
 
-import com.pengrad.telegrambot.model.Update;
+import com.gosanon.javabotexample.api.transports.ITransport;
 
 public class EventContext {
     private ITransport transport;
@@ -21,7 +21,7 @@ public class EventContext {
         return this;
     }
 
-    public boolean isAlreadyReplied() {
-        return alreadyReplied;
+    public boolean notYetReplied() {
+        return !alreadyReplied;
     }
 }

@@ -1,8 +1,8 @@
-package com.gosanon.javabotexample.transports.implementations;
+package com.gosanon.javabotexample.api.transports.implementations;
 
-import com.gosanon.javabotexample.transports.CommonTransport;
-import com.gosanon.javabotexample.transports.ContextHandler;
-import com.gosanon.javabotexample.transports.EventContext;
+import com.gosanon.javabotexample.api.transports.context.EventContext;
+import com.gosanon.javabotexample.api.transports.CommonTransport;
+import com.gosanon.javabotexample.api.transports.context.ContextHandler;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;

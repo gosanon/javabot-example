@@ -1,4 +1,4 @@
-package com.gosanon.javabotexample.transports;
+package com.gosanon.javabotexample.api.transports.context;
 
 public class NewMessage {
     private final String messageText;

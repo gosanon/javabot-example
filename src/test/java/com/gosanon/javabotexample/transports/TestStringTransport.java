@@ -1,5 +1,9 @@
 package com.gosanon.javabotexample.transports;
 
+import com.gosanon.javabotexample.api.transports.CommonTransport;
+import com.gosanon.javabotexample.api.transports.context.ContextHandler;
+import com.gosanon.javabotexample.api.transports.context.EventContext;
+
 import java.util.ArrayList;
 import java.util.List;
 
