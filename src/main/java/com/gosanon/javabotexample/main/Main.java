@@ -1,7 +1,6 @@
 package com.gosanon.javabotexample.main;
 
-import com.gosanon.javabotexample.transports.ITransport;
-import com.gosanon.javabotexample.transports.implementations.TgTransport;
+import com.gosanon.javabotexample.main.questionsprovider.QuestionsProvider;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,7 +27,7 @@ public class Main {
             )
 
             .startBot();*/
-        var a = Questions.nextQuestion();
+        var a = QuestionsProvider.nextQuestion();
         System.out.println("abc");
     }
 }

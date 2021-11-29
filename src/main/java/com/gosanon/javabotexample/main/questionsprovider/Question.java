@@ -1,4 +1,4 @@
-package com.gosanon.javabotexample.main;
+package com.gosanon.javabotexample.main.questionsprovider;
 
 public class Question {
     public final String Question;

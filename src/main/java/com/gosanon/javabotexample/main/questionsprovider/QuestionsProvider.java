@@ -1,10 +1,10 @@
-package com.gosanon.javabotexample.main;
+package com.gosanon.javabotexample.main.questionsprovider;
 
 import java.io.*;
 import java.net.URL;
 import java.util.regex.Pattern;
 
-public class Questions {
+public class QuestionsProvider {
     protected static Question parseData(String data){
         data = data.substring(2, data.length() - 2);
         var questionRegex = "\"question\":\"(.+?[^\\\\])\"";
