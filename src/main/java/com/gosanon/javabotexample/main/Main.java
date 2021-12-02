@@ -24,6 +24,8 @@ public class Main {
             , ""
             , "При желании можете писать боту любые сообщения - он просто перешлёт их обратно Вам.");
 
+
+
         ITransport tgBot = new TgTransport(TOKEN);
 
         System.out.println("PROGRAM STARTED!");
