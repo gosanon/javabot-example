@@ -14,8 +14,8 @@ public class RuntimeDB {
         db.put(id, DEFAULT_VALUE);
     }
 
-    public static void updateRecord(String id, String newNumber) {
-        db.put(id, newNumber);
+    public static void updateRecord(String id, String newValue) {
+        db.put(id, newValue);
     }
 
     public static void deleteRecord(String id) {
