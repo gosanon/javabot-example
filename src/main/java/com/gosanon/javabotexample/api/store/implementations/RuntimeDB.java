@@ -8,7 +8,7 @@ public class RuntimeDB implements IStore {
     private String DEFAULT_VALUE = "";
     private HashMap<String, String> db = new HashMap<>();
 
-    public String getById(String id) {
+    public String getRecord(String id) {
         return db.get(id);
     }
 
