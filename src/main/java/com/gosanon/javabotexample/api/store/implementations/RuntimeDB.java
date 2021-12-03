@@ -5,10 +5,19 @@ import com.gosanon.javabotexample.api.store.IStore;
 import java.util.HashMap;
 
 public class RuntimeDB implements IStore {
-    private String DEFAULT_VALUE = "";
-    private HashMap<String, String> db = new HashMap<>();
+    private final String DEFAULT_VALUE;
+    private final HashMap<String, String> db = new HashMap<>();
+
+    public RuntimeDB(String defaultStateName) {
+        this.DEFAULT_VALUE = defaultStateName;
+    }
 
     public String getRecord(String id) {
+        if (db.containsKey(id)) {
+            return db.get(id);
+        }
+
+        resetRecord(id);
         return db.get(id);
     }
 

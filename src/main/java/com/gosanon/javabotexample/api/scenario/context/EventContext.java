@@ -1,9 +1,11 @@
-package com.gosanon.javabotexample.api.transports.context;
+package com.gosanon.javabotexample.api.scenario.context;
 
+import com.gosanon.javabotexample.api.store.IStore;
 import com.gosanon.javabotexample.api.transports.ITransport;
 
 public class EventContext {
     private ITransport transport;
+    private IStore store;
     public NewMessage newMessage;
 
     private boolean alreadyReplied;
@@ -11,6 +13,10 @@ public class EventContext {
     public EventContext(ITransport transport, String newMessageText, String newMessageSenderId) {
         this.newMessage = new NewMessage(newMessageText, newMessageSenderId);
         this.transport = transport;
+    }
+
+    public boolean notYetReplied() {
+        return !alreadyReplied;
     }
 
     public EventContext reply(String replyMessage) {
@@ -21,7 +27,14 @@ public class EventContext {
         return this;
     }
 
-    public boolean notYetReplied() {
-        return !alreadyReplied;
+    // I shall think where I should call this.
+    public void setStore(IStore store) {
+        this.store = store;
+    }
+
+    public EventContext setState(String newStateName) {
+        var userId = this.newMessage.getSenderId();
+        store.updateRecord(userId, newStateName);
+        return this;
     }
 }

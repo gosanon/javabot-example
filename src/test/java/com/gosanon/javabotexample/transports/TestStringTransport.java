@@ -1,17 +1,17 @@
 package com.gosanon.javabotexample.transports;
 
 import com.gosanon.javabotexample.api.transports.CommonTransport;
-import com.gosanon.javabotexample.api.transports.context.ContextHandler;
-import com.gosanon.javabotexample.api.transports.context.EventContext;
+import com.gosanon.javabotexample.api.scenario.context.ContextHandler;
+import com.gosanon.javabotexample.api.scenario.context.EventContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class TestStringTransport extends CommonTransport {
+public class TestStringTransport {//extends CommonTransport {
 
-    private String[] userMessages;
+    /*private String[] userMessages;
 
     public List<String> getReplies() {
         return replies;
@@ -56,5 +56,5 @@ public class TestStringTransport extends CommonTransport {
     public void clearChatHistory(){
         userMessages = null;
         replies = new ArrayList<String>();
-    }
+    }*/
 }

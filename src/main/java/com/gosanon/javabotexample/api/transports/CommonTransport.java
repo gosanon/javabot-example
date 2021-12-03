@@ -1,53 +1,34 @@
 package com.gosanon.javabotexample.api.transports;
 
+import com.gosanon.javabotexample.api.scenario.ScenarioHandler;
+import com.gosanon.javabotexample.api.scenario.StateScenario;
 
-import com.gosanon.javabotexample.api.transports.context.ContextHandler;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 public abstract class CommonTransport implements ITransport {
-    private final Map<String, ContextHandler> handlers = new LinkedHashMap<>();
-    private boolean isBotStarted = false;
-    protected ContextHandler finalHandler;
+    protected final ArrayList<StateScenario> boundScenarios = new ArrayList<>();
+    private final ArrayList<ScenarioHandler> onScenarioBindHandlers = new ArrayList<>();
 
-    public ITransport addContextHandler(String handlerId, ContextHandler handler) {
-        if (isBotStarted)
-            throw new RuntimeException("Adding handlers after bot start is not allowed");
-
-        handlers.put(handlerId, handler);
-        return this;
-    }
-
-    public ITransport addCommandHandler(String commandText, ContextHandler handler) {
-        return addContextHandler(commandText, ctx -> {
-            if (ctx.newMessage.getMessageText().equals(commandText)) {
-                return handler.apply(ctx);
-            }
-
-            return ctx;
-        });
-    }
-
-    abstract protected void initBot(ContextHandler finalHandler);
-
-    public ITransport startBot() {
-        if (isBotStarted)
-            throw new RuntimeException("Calling startBot() after bot start is not allowed");
-
-        isBotStarted = true;
-
-        // COMPOSE HANDLERS
-        ContextHandler complexHandler = ctx -> ctx;
-        for (String handlerName: handlers.keySet()) {
-            complexHandler = handlers.get(handlerName).compose(complexHandler)::apply;
+    private void onScenarioBind(StateScenario scenario) {
+        for (var handler: onScenarioBindHandlers) {
+            // This also allows scenario mutations from CommonTransport inheritors.
+            handler.apply(scenario);
         }
-        finalHandler = complexHandler;
+    }
 
-        // INIT BOT
-        initBot(finalHandler);
-
+    /*
+        Example use: in test transport, add handler to generate output to memory.
+        It was possible to create an empty method so that it would be overridden later;
+        However I decided to do it this way to make this part of abstract class functionality more fixed.
+    */
+    protected ITransport addOnScenarioBindHandler(ScenarioHandler handler) {
+        onScenarioBindHandlers.add(handler);
         return this;
+    }
+
+    public void bindScenarioHandler(StateScenario scenario) {
+        boundScenarios.add(scenario);
+        onScenarioBind(scenario);
     }
 
     abstract public void sendMessage(String targetId, String messageText);

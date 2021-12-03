@@ -1,4 +1,4 @@
-package com.gosanon.javabotexample.api.transports.context;
+package com.gosanon.javabotexample.api.scenario.context;
 
 import java.util.function.Function;
 

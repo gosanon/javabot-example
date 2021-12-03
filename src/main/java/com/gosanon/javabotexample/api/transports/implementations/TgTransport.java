@@ -1,8 +1,8 @@
 package com.gosanon.javabotexample.api.transports.implementations;
 
-import com.gosanon.javabotexample.api.transports.context.EventContext;
+import com.gosanon.javabotexample.api.scenario.context.EventContext;
 import com.gosanon.javabotexample.api.transports.CommonTransport;
-import com.gosanon.javabotexample.api.transports.context.ContextHandler;
+import com.gosanon.javabotexample.api.scenario.context.ContextHandler;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -18,13 +18,12 @@ public class TgTransport extends CommonTransport {
 
     public TgTransport(String TOKEN) {
         bot = new TelegramBot(TOKEN);
-    }
 
-    protected void initBot(ContextHandler finalHandler) {
-        // INIT BOT
         System.out.println("BOT STARTED!");
         bot.setUpdatesListener(updateList -> {
-            updateList.forEach(update -> finalHandler.apply(this.toEventContext(update)));
+            for (var scenario: boundScenarios) {
+                updateList.forEach(update -> scenario.complexScenarioHandler.apply(this.toEventContext(update)));
+            }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
     }
