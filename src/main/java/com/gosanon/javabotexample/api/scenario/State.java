@@ -9,6 +9,7 @@ public class State {
     String name;
 
     private final Map<String, ContextHandler> handlers = new LinkedHashMap<>();
+    private int lastHandlerId = 0;
 
     public State(String name) {
         this.name = name;
@@ -18,19 +19,22 @@ public class State {
         return this.name;
     }
 
-    public State addContextHandler(String handlerId, ContextHandler handler) {
+    public State addContextHandler(ContextHandler handler) {
+        var handlerId = String.format("JAVABOT_HANDLER_%d", lastHandlerId);
         handlers.put(handlerId, handler);
         return this;
     }
 
     public State addCommandHandler(String commandText, ContextHandler handler) {
-        return addContextHandler(commandText, ctx -> {
+        handlers.put(commandText, ctx -> {
             if (ctx.newMessage.getMessageText().equals(commandText)) {
                 return handler.apply(ctx);
             }
 
             return ctx;
         });
+
+        return this;
     }
 
     public ContextHandler buildFinalHandler() {

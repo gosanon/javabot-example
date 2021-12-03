@@ -8,6 +8,7 @@ import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
 import com.gosanon.javabotexample.api.transports.ITransport;
 import com.gosanon.javabotexample.api.transports.implementations.TgTransport;
 
+import static com.gosanon.javabotexample.main.CommonHandlers.*;
 import static com.gosanon.javabotexample.main.Constants.*;
 
 public class Main {
@@ -15,13 +16,7 @@ public class Main {
         // Constants
         String defaultStateName = "Default state";
 
-        // Common handlers
-        ContextHandler copyUserMessageHandler =
-            ctx -> ctx.notYetReplied()
-                ? ctx.reply(ctx.newMessage.getMessageText())
-                : ctx;
-
-        // Prepare data
+        // Prepare data and db
         String TOKEN = System.getenv("JAVABOT_TOKEN_TG");
         IStore runtimeDb = new RuntimeDB(defaultStateName);
 
@@ -35,23 +30,19 @@ public class Main {
             .addState(new State("Default state")
 
                 // Add handlers
-                .addCommandHandler("/start", ctx -> ctx.reply(startMessage))
-                .addCommandHandler("/help", ctx -> ctx.reply(helpMessage))
+                .addCommandHandler("/start", reply(startMessage))
+                .addCommandHandler("/help", reply(helpMessage))
                 .addCommandHandler("SECOND STATE",
-                    ctx -> ctx
-                        .reply("Переход во второе состояние")
-                        .setState("Second state")
+                    replyAndSetState("Переход во второе состояние", "Second state")
                 )
-                .addContextHandler("Copy message if not answered by commands", copyUserMessageHandler)
+                .addContextHandler(notAnsweredThenCopy())
             )
 
             .addState(new State("Second state")
                 .addCommandHandler("GO BACK",
-                    ctx -> ctx
-                        .reply("Переход в состояние по умолчанию")
-                        .setState("Default state")
+                    replyAndSetState("Переход в состояние по умолчанию", "Default state")
                 )
-                .addContextHandler("Copy message if not answered by commands", copyUserMessageHandler)
+                .addContextHandler(notAnsweredThenCopy())
             )
 
             // Add transports

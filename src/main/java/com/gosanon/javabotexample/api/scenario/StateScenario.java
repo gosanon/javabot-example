@@ -33,9 +33,9 @@ public class StateScenario {
     }
 
     public StateScenario addTransport(ITransport transport) {
-        addInputTransport(transport);
-        addOutputTransport(transport);
-        return this;
+        return this
+            .addInputTransport(transport)
+            .addOutputTransport(transport);
     }
 
     public StateScenario initWithStore(IStore store) {
