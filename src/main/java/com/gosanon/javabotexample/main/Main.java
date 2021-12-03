@@ -55,7 +55,7 @@ public class Main {
             )
 
             // Add transports
-            .addIOTransport(tgBot)
+            .addTransport(tgBot)
 
             // Init scenario
             .initWithStore(runtimeDb);

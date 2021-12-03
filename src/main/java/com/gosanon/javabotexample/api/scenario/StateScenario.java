@@ -22,17 +22,17 @@ public class StateScenario {
         return this;
     }
 
-    public StateScenario addInputTransport(ITransport transport) {
+    private StateScenario addInputTransport(ITransport transport) {
         transport.bindScenarioHandler(this);
         return this;
     }
 
-    public StateScenario addOutputTransport(ITransport transport) {
+    private StateScenario addOutputTransport(ITransport transport) {
         outputTransports.add(transport);
         return this;
     }
 
-    public StateScenario addIOTransport(ITransport transport) {
+    public StateScenario addTransport(ITransport transport) {
         addInputTransport(transport);
         addOutputTransport(transport);
         return this;
