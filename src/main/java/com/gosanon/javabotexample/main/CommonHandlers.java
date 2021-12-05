@@ -1,6 +1,9 @@
 package com.gosanon.javabotexample.main;
 
 import com.gosanon.javabotexample.api.scenario.context.ContextHandler;
+import com.gosanon.javabotexample.api.scenario.context.EventContext;
+
+import java.util.regex.Pattern;
 
 public class CommonHandlers {
     static ContextHandler notAnsweredThenCopy() {

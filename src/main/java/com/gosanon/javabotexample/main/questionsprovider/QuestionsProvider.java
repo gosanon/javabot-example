@@ -1,5 +1,7 @@
 package com.gosanon.javabotexample.main.questionsprovider;
 
+import com.gosanon.javabotexample.main.Main;
+
 import java.io.*;
 import java.net.URL;
 import java.util.regex.Pattern;
@@ -10,17 +12,13 @@ public class QuestionsProvider {
         var questionRegex = "\"question\":\"(.+?[^\\\\])\"";
         var answerRegex = "\"answer\":\"(.+?[^\\\\])\"";
         var valueRegex = "\"value\":(\\d+)";
-        var question = findMatchByRegex(data, questionRegex);
-        var answer = findMatchByRegex(data, answerRegex);
-        var questionValue = Integer.parseInt(findMatchByRegex(data, valueRegex));
+        var question = Main.findMatchByRegex(data, questionRegex);
+        var answer = Main.findMatchByRegex(data, answerRegex);
+        var questionValue = Integer.parseInt(Main.findMatchByRegex(data, valueRegex));
         return new Question(question,answer, questionValue);
     }
 
-    protected static String findMatchByRegex(String text, String regex){
-        var pattern = Pattern.compile(regex);
-        var matcher = pattern.matcher(text);
-        return matcher.find() ? matcher.group(1) : "";
-    }
+
 
     public static Question nextQuestion(){
         var urlAddress = "https://jservice.io/api/random";
