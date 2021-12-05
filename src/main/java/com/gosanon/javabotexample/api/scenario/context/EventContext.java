@@ -4,7 +4,7 @@ import com.gosanon.javabotexample.api.store.IStore;
 import com.gosanon.javabotexample.api.transports.ITransport;
 
 public class EventContext {
-    private ITransport transport;
+    private final ITransport transport;
     private IStore store;
     public NewMessage newMessage;
 
