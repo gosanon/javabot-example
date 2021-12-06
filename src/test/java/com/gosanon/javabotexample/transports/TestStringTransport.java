@@ -1,3 +1,4 @@
+/*
 package com.gosanon.javabotexample.transports;
 
 import com.gosanon.javabotexample.api.transports.CommonTransport;
@@ -9,22 +10,15 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class TestStringTransport {//extends CommonTransport {
+public class TestStringTransport extends CommonTransport {
 
-    /*private String[] userMessages;
+    private String[] userMessages;
 
     public List<String> getReplies() {
         return replies;
     }
 
     private List<String> replies = new ArrayList<String>();
-
-
-    @Override
-    protected void initBot(ContextHandler finalHandler) {
-        // finalHandler has been made a field which means
-        // TestStringTransport does not have to init at all
-    }
 
     public void sendUserMessages(String[] userMessages){
         this.userMessages = userMessages;
@@ -56,5 +50,6 @@ public class TestStringTransport {//extends CommonTransport {
     public void clearChatHistory(){
         userMessages = null;
         replies = new ArrayList<String>();
-    }*/
+    }
 }
+*/

@@ -67,23 +67,25 @@ public class Main {
 
     private static EventContext quizPreparing(EventContext ctx){
         var numberRegex = "(^\\d+$)";
-        if(ctx.notYetReplied()) {
-            var numberOfQuestions = 0;
-            try {
-                numberOfQuestions = Integer.parseInt(
-                        findMatchByRegex(numberRegex, ctx.newMessage.getMessageText()));
-            }
-            catch (Exception e){
-                return ctx.reply("Введите число вопросов");
-            }
-            QuizDB.put(ctx.newMessage.getSenderId(), new UserQuizStats(numberOfQuestions));
-            QuizDB.get(ctx.newMessage.getSenderId()).currentQuestion = QuestionsProvider.nextQuestion();
-            ctx.reply("Начинаем викторину.\n\n" + QuizDB
+        var numberOfQuestions = 0;
+        var errorMessage = "";
+        try {
+            numberOfQuestions = Integer.parseInt(
+                    findMatchByRegex(numberRegex, ctx.newMessage.getMessageText()));
+            if(numberOfQuestions < 1)
+                throw new Exception("Число меньше нуля");
+        }
+        catch (Exception e){
+            errorMessage = "Бот не понял ваш ввод, так что будет 10 вопросов.\n";
+            numberOfQuestions = 10;
+        }
+        QuizDB.put(ctx.newMessage.getSenderId(), new UserQuizStats(numberOfQuestions));
+        QuizDB.get(ctx.newMessage.getSenderId()).currentQuestion = QuestionsProvider.nextQuestion();
+        ctx.reply(errorMessage + "Начинаем викторину.\n\n" + QuizDB
                         .get(ctx.newMessage.getSenderId())
                         .currentQuestion
-                        .Question)
+                        .question)
                 .setState("Quiz state");
-        }
         return ctx;
     }
 
@@ -94,34 +96,36 @@ public class Main {
     }
 
     private static EventContext quizHandler(EventContext ctx){
-        if(ctx.notYetReplied()){
-            var userStats = QuizDB.get(ctx.newMessage.getSenderId());
-            var messageAboutUserAnswer = "";
-            userStats.answeredQuestionsNumber++;
-            var userAnswer = ctx.newMessage.getMessageText();
-            var correctAnswer = userStats.currentQuestion.Answer;
-            if (userAnswer.equalsIgnoreCase(correctAnswer)){
-                userStats.correctAnswerNumber++;
-                userStats.score += userStats.currentQuestion.Value;
-                messageAboutUserAnswer = "Правильно!\n";
-            }
-            else messageAboutUserAnswer = "Неправильно. Правильный ответ: " + correctAnswer + "\n";
-            if (userStats.questionNumber == userStats.answeredQuestionsNumber){
-                ctx.reply(String.format(
-                                """
-                                        Викторина окончена. Итого:
-                                        Всего вопросов: %d
-                                        Правильных ответов: %d
-                                        Очков набрано: %d""",
-                                userStats.questionNumber, userStats.correctAnswerNumber, userStats.score))
+        var userStats = QuizDB.get(ctx.newMessage.getSenderId());
+        userStats.answeredQuestionsNumber++;
+        var userAnswer = ctx.newMessage.getMessageText();
+        var messageAboutUserAnswer = checkAnswer(userAnswer, userStats);
+        if (userStats.questionNumber == userStats.answeredQuestionsNumber){
+            ctx.reply(String.format(
+                            """
+                                    Викторина окончена. Итого:
+                                    Всего вопросов: %d
+                                    Правильных ответов: %d
+                                    Очков набрано: %d""",
+                            userStats.questionNumber, userStats.correctAnswerNumber, userStats.score))
                     .setState("Default state");
-                QuizDB.remove(ctx.newMessage.getSenderId());
-            }
-            else {
-                userStats.currentQuestion = QuestionsProvider.nextQuestion();
-                ctx.reply(messageAboutUserAnswer + "Следующий вопрос:\n" + userStats.currentQuestion.Question);
-            }
+            QuizDB.remove(ctx.newMessage.getSenderId());
+        }
+        else {
+            userStats.currentQuestion = QuestionsProvider.nextQuestion();
+            ctx.reply(messageAboutUserAnswer + "Следующий вопрос:\n" + userStats.currentQuestion.question);
         }
         return ctx;
+    }
+
+    private static String checkAnswer(String userAnswer, UserQuizStats userStats) {
+
+        var correctAnswer = userStats.currentQuestion.answer;
+        if (userAnswer.equalsIgnoreCase(correctAnswer)){
+            userStats.correctAnswerNumber++;
+            userStats.score += userStats.currentQuestion.value;
+            return "Правильно!\n";
+        }
+        else return "Неправильно. Правильный ответ: " + correctAnswer + "\n";
     }
 }
