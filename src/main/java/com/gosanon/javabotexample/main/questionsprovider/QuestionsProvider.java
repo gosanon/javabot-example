@@ -4,21 +4,14 @@ import com.gosanon.javabotexample.main.Main;
 
 import java.io.*;
 import java.net.URL;
-import java.util.regex.Pattern;
+import com.google.gson.Gson;
 
 public class QuestionsProvider {
     protected static Question parseData(String data){
-        data = data.substring(2, data.length() - 2);
-        var questionRegex = "\"question\":\"(.+?[^\\\\])\"";
-        var answerRegex = "\"answer\":\"(.+?[^\\\\])\"";
-        var valueRegex = "\"value\":(\\d+)";
-        var question = Main.findMatchByRegex(data, questionRegex);
-        var answer = Main.findMatchByRegex(data, answerRegex);
-        var questionValue = Integer.parseInt(Main.findMatchByRegex(data, valueRegex));
-        return new Question(question,answer, questionValue);
+        var arrayOfOneToObject = data.substring(1, data.length() - 1);
+        var gson = new Gson();
+        return gson.fromJson(arrayOfOneToObject, Question.class);
     }
-
-
 
     public static Question nextQuestion(){
         var urlAddress = "https://jservice.io/api/random";

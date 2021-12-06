@@ -22,7 +22,13 @@ public class TgTransport extends CommonTransport {
         System.out.println("BOT STARTED!");
         bot.setUpdatesListener(updateList -> {
             for (var scenario: boundScenarios) {
-                updateList.forEach(update -> scenario.complexScenarioHandler.apply(this.toEventContext(update)));
+                updateList.forEach(update -> {
+                    if (update.myChatMember() != null) {
+                        // Means Update type is "ChatMemberUpdated", we ignore this
+                        return;
+                    }
+                    scenario.complexScenarioHandler.apply(this.toEventContext(update));
+                });
             }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
