@@ -37,7 +37,7 @@ public class State {
         return this;
     }
 
-    public ContextHandler buildFinalHandler() {
+    ContextHandler buildFinalHandler() {
         ContextHandler complexHandler = ctx -> ctx;
 
         for (String handlerName: handlers.keySet()) {

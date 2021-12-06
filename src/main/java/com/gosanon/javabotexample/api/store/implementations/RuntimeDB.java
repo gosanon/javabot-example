@@ -8,8 +8,8 @@ public class RuntimeDB implements IStore {
     private final String DEFAULT_VALUE;
     private final HashMap<String, String> db = new HashMap<>();
 
-    public RuntimeDB(String databaseID) {
-        this.DEFAULT_VALUE = databaseID;
+    public RuntimeDB(String defaultValue) {
+        this.DEFAULT_VALUE = defaultValue;
     }
 
     public String getRecord(String id) {

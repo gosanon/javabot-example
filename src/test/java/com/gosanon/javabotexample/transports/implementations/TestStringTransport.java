@@ -1,5 +1,4 @@
-/*
-package com.gosanon.javabotexample.transports;
+package com.gosanon.javabotexample.transports.implementations;
 
 import com.gosanon.javabotexample.api.transports.CommonTransport;
 import com.gosanon.javabotexample.api.scenario.context.ContextHandler;
@@ -36,20 +35,20 @@ public class TestStringTransport extends CommonTransport {
         replies.add(messageText);
     }
 
-    public void expectBehaviour(String[] userMessages, String[] expectedReplies){
-        this.sendUserMessages(userMessages);
-
-        for (var message : this.userMessages) {
-            this.finalHandler.apply(this.toEventContext(message));
-        }
-
-        assertArrayEquals(this.getReplies().toArray(), expectedReplies);
-        clearChatHistory();
-    }
-
     public void clearChatHistory(){
         userMessages = null;
         replies = new ArrayList<String>();
     }
+
+    public void expectBehaviour(String[] userMessages, String[] expectedReplies){
+        this.sendUserMessages(userMessages);
+
+        for (var message : this.userMessages) {
+            this.boundScenarios.forEach(scenario -> scenario.complexScenarioHandler.apply(this.toEventContext(message)));
+        }
+
+        assertArrayEquals(expectedReplies, this.getReplies().toArray());
+        clearChatHistory();
+    }
 }
-*/
+
