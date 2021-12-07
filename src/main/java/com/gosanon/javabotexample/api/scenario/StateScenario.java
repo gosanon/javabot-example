@@ -1,10 +1,9 @@
 package com.gosanon.javabotexample.api.scenario;
 
 import com.gosanon.javabotexample.api.scenario.context.ContextHandler;
-import com.gosanon.javabotexample.api.store.IStore;
+import com.gosanon.javabotexample.api.store.IUserStateStore;
 import com.gosanon.javabotexample.api.transports.ITransport;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StateScenario {
@@ -23,7 +22,7 @@ public class StateScenario {
         return this;
     }
 
-    public StateScenario initWithStore(IStore store) {
+    public StateScenario initWithStore(IUserStateStore store) {
         for (String stateName: states.keySet()) {
             statesHandlers.put(stateName, states.get(stateName).buildFinalHandler());
         }
@@ -32,7 +31,7 @@ public class StateScenario {
             ctx.setStore(store);
 
             String userId = ctx.newMessage.getSenderId();
-            String userState = store.getRecord(userId);
+            String userState = store.getUserState(userId);
             ContextHandler userStateHandler = statesHandlers.get(userState);
 
             return userStateHandler.apply(ctx);

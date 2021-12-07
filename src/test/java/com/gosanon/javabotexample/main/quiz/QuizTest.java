@@ -2,7 +2,7 @@ package com.gosanon.javabotexample.main.quiz;
 
 import com.gosanon.javabotexample.api.scenario.State;
 import com.gosanon.javabotexample.api.scenario.StateScenario;
-import com.gosanon.javabotexample.api.store.IStore;
+import com.gosanon.javabotexample.api.store.IUserStateStore;
 import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
 import com.gosanon.javabotexample.transports.implementations.TestStringTransport;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class QuizTest {
     String defaultStateName = "Default state";
-    IStore runtimeDb = new RuntimeDB(defaultStateName);
+    IUserStateStore runtimeDb = new RuntimeDB(defaultStateName);
     TestStringTransport testTransport = new TestStringTransport();
     StateScenario scenario = new StateScenario()
             .addState(new State("Default state")

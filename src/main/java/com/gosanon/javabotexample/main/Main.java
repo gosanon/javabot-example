@@ -2,7 +2,7 @@ package com.gosanon.javabotexample.main;
 
 import com.gosanon.javabotexample.api.scenario.State;
 import com.gosanon.javabotexample.api.scenario.StateScenario;
-import com.gosanon.javabotexample.api.store.IStore;
+import com.gosanon.javabotexample.api.store.IUserStateStore;
 import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
 import com.gosanon.javabotexample.api.transports.ITransport;
 import com.gosanon.javabotexample.api.transports.implementations.TgTransport;
@@ -21,7 +21,7 @@ public class Main {
 
         // Prepare data and db
         String TOKEN = System.getenv("JAVABOT_TOKEN_TG");
-        IStore runtimeDb = new RuntimeDB(defaultStateName);
+        IUserStateStore runtimeDb = new RuntimeDB(defaultStateName);
 
         // Init transports
         ITransport tgBot = new TgTransport(TOKEN);
