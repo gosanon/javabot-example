@@ -2,14 +2,19 @@ package com.gosanon.javabotexample.main;
 
 import com.gosanon.javabotexample.api.scenario.State;
 import com.gosanon.javabotexample.api.scenario.StateScenario;
+import com.gosanon.javabotexample.api.scenario.context.EventContext;
 import com.gosanon.javabotexample.api.store.IStore;
 import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
 import com.gosanon.javabotexample.api.transports.ITransport;
 import com.gosanon.javabotexample.api.transports.implementations.TgTransport;
+import com.gosanon.javabotexample.main.questionsprovider.Question;
+import com.gosanon.javabotexample.main.questionsprovider.QuestionsProvider;
 import com.gosanon.javabotexample.main.questionsprovider.QuizHandlers;
 
 import static com.gosanon.javabotexample.main.CommonHandlers.*;
 import static com.gosanon.javabotexample.main.Constants.*;
+import static com.gosanon.javabotexample.main.questionsprovider.QuizHandlers.quizHandler;
+import static com.gosanon.javabotexample.main.questionsprovider.QuizHandlers.quizPreparing;
 
 public class Main {
 
@@ -40,7 +45,7 @@ public class Main {
             )
 
             .addState(new State("Quiz preparing")
-                .addContextHandler(QuizHandlers::quizPreparing)
+                .addContextHandler(ctx -> quizPreparing(ctx, QuestionsProvider.nextQuestion()))
             )
 
             .addState(new State("Quiz state")
@@ -48,7 +53,7 @@ public class Main {
                     replyAndSetState("Отменяем викторину", "Default state")
                 )
                 .addCommandHandler("/help", reply(quizHelpMessage))
-                .addContextHandler(QuizHandlers::quizHandler)
+                .addContextHandler(ctx -> quizHandler(ctx, QuestionsProvider.nextQuestion()))
             )
 
             // Add transports

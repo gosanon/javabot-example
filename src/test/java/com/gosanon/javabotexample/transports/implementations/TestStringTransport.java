@@ -17,7 +17,9 @@ public class TestStringTransport extends CommonTransport {
         return replies;
     }
 
-    private List<String> replies = new ArrayList<String>();
+    private List<String> replies = new ArrayList<>();
+
+    public String senderId = "hooba-booba";
 
     public void sendUserMessages(String[] userMessages){
         this.userMessages = userMessages;
@@ -26,7 +28,6 @@ public class TestStringTransport extends CommonTransport {
     @Override
     public <T> EventContext toEventContext(T BaseContext) {
         var message = BaseContext.toString();
-        String senderId = "hooba-booba";
         return new EventContext(this, message, senderId);
     }
 
@@ -37,18 +38,21 @@ public class TestStringTransport extends CommonTransport {
 
     public void clearChatHistory(){
         userMessages = null;
-        replies = new ArrayList<String>();
+        replies = new ArrayList<>();
     }
 
     public void expectBehaviour(String[] userMessages, String[] expectedReplies){
+        this.processMessages(userMessages);
+        assertArrayEquals(expectedReplies, this.getReplies().toArray());
+        clearChatHistory();
+    }
+
+    public void processMessages(String[] userMessages){
         this.sendUserMessages(userMessages);
 
         for (var message : this.userMessages) {
             this.boundScenarios.forEach(scenario -> scenario.complexScenarioHandler.apply(this.toEventContext(message)));
         }
-
-        assertArrayEquals(expectedReplies, this.getReplies().toArray());
-        clearChatHistory();
     }
 }
 
