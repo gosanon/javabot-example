@@ -38,7 +38,7 @@ public class TestStringTransport extends CommonTransport {
 
     @Override
     public void sendPhoto(String targetId, String photoURL) {
-        // TBA
+        replies.add("Фото отправлено, адрес url: " + photoURL);
     }
 
     public void clearChatHistory(){
