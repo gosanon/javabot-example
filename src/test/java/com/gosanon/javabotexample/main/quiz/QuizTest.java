@@ -95,6 +95,6 @@ class QuizTest {
         for (int i = 0; i < numberOfQuestions; i++){
             userAnswers.add(QuestionProviderForTest.questions.get(i).answer);
         }
-        commonUseTest(userAnswers, numberOfQuestions, 3);
+        commonUseTest(userAnswers, numberOfQuestions, numberOfQuestions);
     }
 }

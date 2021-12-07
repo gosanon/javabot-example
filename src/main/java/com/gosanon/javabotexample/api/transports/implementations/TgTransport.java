@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SendPhoto;
 
 import static java.lang.Integer.parseInt;
 
@@ -44,5 +45,8 @@ public class TgTransport extends CommonTransport {
 
     public void sendMessage(String targetId, String messageText) {
         bot.execute(new SendMessage(parseInt(targetId), messageText));
+    }
+    public void sendPhoto(String targetId, String photoURL){
+        bot.execute(new SendPhoto(parseInt(targetId), photoURL));
     }
 }
