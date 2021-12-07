@@ -37,4 +37,9 @@ public class EventContext {
         store.updateRecord(userId, newStateName);
         return this;
     }
+
+    public EventContext sendPhoto(String photoUrl) {
+        transport.sendPhoto(newMessage.getSenderId(), photoUrl);
+        return this;
+    }
 }

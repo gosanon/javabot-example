@@ -36,6 +36,11 @@ public class TestStringTransport extends CommonTransport {
         replies.add(messageText);
     }
 
+    @Override
+    public void sendPhoto(String targetId, String photoURL) {
+        // TBA
+    }
+
     public void clearChatHistory(){
         userMessages = null;
         replies = new ArrayList<>();

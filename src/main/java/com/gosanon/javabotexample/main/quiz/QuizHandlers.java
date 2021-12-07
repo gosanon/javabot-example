@@ -52,7 +52,8 @@ public class QuizHandlers {
                                         Правильных ответов: %d
                                         Очков набрано: %d""",
                                 userStats.questionNumber, userStats.correctAnswerNumber, userStats.score))
-                        .setState("Default state");
+                        .setState("Default state")
+                    .sendPhoto("https://upload.wikimedia.org/wikipedia/en/e/e4/Green_tick.png");
             }
             else {
                 userStats.currentQuestion = questionSource;
