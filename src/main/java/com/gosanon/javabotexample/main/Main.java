@@ -2,19 +2,16 @@ package com.gosanon.javabotexample.main;
 
 import com.gosanon.javabotexample.api.scenario.State;
 import com.gosanon.javabotexample.api.scenario.StateScenario;
-import com.gosanon.javabotexample.api.scenario.context.EventContext;
 import com.gosanon.javabotexample.api.store.IStore;
 import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
 import com.gosanon.javabotexample.api.transports.ITransport;
 import com.gosanon.javabotexample.api.transports.implementations.TgTransport;
-import com.gosanon.javabotexample.main.questionsprovider.Question;
-import com.gosanon.javabotexample.main.questionsprovider.QuestionsProvider;
-import com.gosanon.javabotexample.main.questionsprovider.QuizHandlers;
+import com.gosanon.javabotexample.main.quiz.QuestionsProvider;
 
 import static com.gosanon.javabotexample.main.CommonHandlers.*;
 import static com.gosanon.javabotexample.main.Constants.*;
-import static com.gosanon.javabotexample.main.questionsprovider.QuizHandlers.quizHandler;
-import static com.gosanon.javabotexample.main.questionsprovider.QuizHandlers.quizPreparing;
+import static com.gosanon.javabotexample.main.quiz.QuizHandlers.quizHandler;
+import static com.gosanon.javabotexample.main.quiz.QuizHandlers.quizPreparing;
 
 public class Main {
 

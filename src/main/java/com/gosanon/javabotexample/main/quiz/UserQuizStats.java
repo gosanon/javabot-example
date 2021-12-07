@@ -1,4 +1,4 @@
-package com.gosanon.javabotexample.main.questionsprovider;
+package com.gosanon.javabotexample.main.quiz;
 
 public class UserQuizStats {
     public int questionNumber;

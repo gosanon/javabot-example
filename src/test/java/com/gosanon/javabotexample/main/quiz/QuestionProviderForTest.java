@@ -1,4 +1,4 @@
-package com.gosanon.javabotexample.main.questionsprovider;
+package com.gosanon.javabotexample.main.quiz;
 
 import java.util.ArrayList;
 

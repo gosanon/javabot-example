@@ -1,6 +1,4 @@
-package com.gosanon.javabotexample.main.questionsprovider;
-
-import com.gosanon.javabotexample.main.Main;
+package com.gosanon.javabotexample.main.quiz;
 
 import java.io.*;
 import java.net.URL;

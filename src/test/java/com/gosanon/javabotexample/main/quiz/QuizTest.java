@@ -1,11 +1,9 @@
-package com.gosanon.javabotexample.main.questionsprovider;
+package com.gosanon.javabotexample.main.quiz;
 
 import com.gosanon.javabotexample.api.scenario.State;
 import com.gosanon.javabotexample.api.scenario.StateScenario;
 import com.gosanon.javabotexample.api.store.IStore;
 import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
-import com.gosanon.javabotexample.api.transports.ITransport;
-import com.gosanon.javabotexample.api.transports.implementations.TgTransport;
 import com.gosanon.javabotexample.transports.implementations.TestStringTransport;
 import org.junit.jupiter.api.Test;
 
@@ -13,10 +11,10 @@ import java.util.ArrayList;
 
 import static com.gosanon.javabotexample.main.CommonHandlers.*;
 import static com.gosanon.javabotexample.main.Constants.*;
-import static com.gosanon.javabotexample.main.questionsprovider.QuizHandlers.*;
+import static com.gosanon.javabotexample.main.quiz.QuizHandlers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class QuizHandlersTest {
+class QuizTest {
     String defaultStateName = "Default state";
     IStore runtimeDb = new RuntimeDB(defaultStateName);
     TestStringTransport testTransport = new TestStringTransport();
