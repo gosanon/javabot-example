@@ -8,4 +8,5 @@ public interface ITransport {
     <T> EventContext toEventContext(T BaseContext);
     void bindScenarioHandler(StateScenario scenario);
     void sendMessage(String targetId, String messageText);
+    void sendPhoto(String targetId, String photoURL);
 }
