@@ -114,7 +114,7 @@ As for use cases, this means that `addContextHandler` and `addCommandHandler` ca
 - A lambda expression: `ctx -> ctx` or `ctx -> ctx.reply(...).reply(...).setState(...).reply(...)`
 - A static method: `static EventContext awesomeHandler(EventContext ctx) { return ctx.(...); }` by referencing it like `ClassName::awesomeHandler`
 
-### Scene
+### State
 Unites context handlers. You can add:
 - command handlers: `addCommandHandler(String commandText, ContextHandler handler)` (though the slash is not obligatory), they trigger when the user message **equals** the command text
 - context handlers: `addContextHandler(ContextHandler handler)` - those will always trigger (except for when the state is different), and the conditions of doing or not doing something should be stated inside the handler.
