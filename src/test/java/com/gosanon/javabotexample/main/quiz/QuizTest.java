@@ -48,44 +48,53 @@ class QuizTest {
         testTransport.expectBehaviour(userInput, expectedOutput);
     }
 
-    @Test
-    public void makeQuizOf10QuestionsIfInputIsIncorrect() {
-        QuestionProviderForTest.prepareQuestions(1);
+    public void testOnIncorrectInput(String incorrectInput) {
+        QuestionProviderForTest.refresh();
         ArrayList<String> userInput = new ArrayList<>();
         userInput.add("/quiz");
-        userInput.add("Я ввёл не число");
+        userInput.add(incorrectInput);
         testTransport.processMessages(userInput.toArray(new String[0]));
         assertEquals(QuizDB.get(testTransport.senderId).questionNumber, 10);
         testTransport.clearChatHistory();
     }
 
     @Test
-    public void whenUserAnsweredWrong() {
-        var questionsCount = 3;
-        QuestionProviderForTest.prepareQuestions(questionsCount + 1);
+    public void makeQuizOf10QuestionsIfInputIsNotANumber() {
+        testOnIncorrectInput("Я ввёл не число");
+    }
+
+    @Test
+    public void makeQuizOf10QuestionsIfInputIsNotNatural() {
+        testOnIncorrectInput("0");
+    }
+    public void commonUseTest(ArrayList<String>  userAnswers, int numberOfQuestions, int numberOfCorrectAnswers) {
+        QuestionProviderForTest.refresh();
         ArrayList<String> userInput = new ArrayList<>();
         userInput.add("/quiz");
-        userInput.add(String.valueOf(questionsCount));
-        for (int i = 0; i < questionsCount; i++){
-            userInput.add("Я не знаю");
-        }
+        userInput.add(String.valueOf(numberOfQuestions));
+        userInput.addAll(userAnswers);
         testTransport.processMessages(userInput.toArray(new String[0]));
-        assertEquals(QuizDB.get(testTransport.senderId).correctAnswerNumber, 0);
+        assertEquals(QuizDB.get(testTransport.senderId).correctAnswerNumber, numberOfCorrectAnswers);
         testTransport.clearChatHistory();
     }
 
     @Test
-    public void whenUserAnsweredRight() {
-        var questionsCount = 3;
-        QuestionProviderForTest.prepareQuestions(questionsCount + 1);
-        ArrayList<String> userInput = new ArrayList<>();
-        userInput.add("/quiz");
-        userInput.add(String.valueOf(questionsCount));
-        for (int i = 0; i < questionsCount; i++){
-            userInput.add(QuestionProviderForTest.questions.get(i).answer);
+    public void whenUserAnsweredWrong() {
+        var userAnswers = new ArrayList<String>();
+        var numberOfQuestions = 3;
+        for (int i = 0; i < numberOfQuestions; i++){
+            userAnswers.add("Я не знаю");
         }
-        testTransport.processMessages(userInput.toArray(new String[0]));
-        assertEquals(QuizDB.get(testTransport.senderId).correctAnswerNumber, questionsCount);
-        testTransport.clearChatHistory();
+        commonUseTest(userAnswers, numberOfQuestions, 0);
+    }
+
+    @Test
+    public void whenUserAnsweredRight() {
+        var userAnswers = new ArrayList<String>();
+        var numberOfQuestions = 3;
+        for (int i = 0; i < numberOfQuestions; i++){
+            userAnswers.add(QuestionProviderForTest.questions.get(i).answer);
+        }
+        commonUseTest(userAnswers, numberOfQuestions, 3);
     }
 }
