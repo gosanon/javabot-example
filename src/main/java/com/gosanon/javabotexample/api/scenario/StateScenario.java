@@ -11,10 +11,6 @@ public class StateScenario {
     private final HashMap<String, State> states = new HashMap<>();
     private final HashMap<String, ContextHandler> statesHandlers = new HashMap<>();
 
-    /* inputTransports list can be used in "polling" model */
-    //private final ArrayList<ITransport> inputTransports = new ArrayList<>();
-    private final ArrayList<ITransport> outputTransports = new ArrayList<>();
-
     public ContextHandler complexScenarioHandler = ctx -> ctx;
 
     public StateScenario addState(State state) {
@@ -22,20 +18,9 @@ public class StateScenario {
         return this;
     }
 
-    private StateScenario addInputTransport(ITransport transport) {
+    public StateScenario addTransport(ITransport transport) {
         transport.bindScenarioHandler(this);
         return this;
-    }
-
-    private StateScenario addOutputTransport(ITransport transport) {
-        outputTransports.add(transport);
-        return this;
-    }
-
-    public StateScenario addTransport(ITransport transport) {
-        return this
-            .addInputTransport(transport)
-            .addOutputTransport(transport);
     }
 
     public StateScenario initWithStore(IStore store) {
