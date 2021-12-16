@@ -10,4 +10,13 @@ public class UserQuizStats {
     public UserQuizStats(int questionNumber){
         this.questionNumber = questionNumber;
     }
+
+    public String toString(){
+        return String.format(
+                """
+                        Вопросов сыграно: %d
+                        Правильных ответов: %d
+                        Очков набрано: %d""",
+                this.answeredQuestionsNumber, this.correctAnswerNumber, this.score);
+    }
 }
