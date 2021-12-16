@@ -90,10 +90,12 @@ public class QuizDB {
     }
 
     public String printLeaderboard(){
-        var result = new StringBuilder();
+        var result = new StringBuilder("Список лидеров:\n");
+        var count = 1;
         for (var e : leaderboard){
             var stats = quizDB.get(e).overallStats;
-            result.append(String.format("%s - %d%n", e, stats.score));
+            result.append(String.format("%d. %s - %d%n", count, e, stats.score));
+            count++;
         }
 
         return result.toString();
