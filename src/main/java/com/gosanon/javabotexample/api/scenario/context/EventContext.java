@@ -1,11 +1,11 @@
 package com.gosanon.javabotexample.api.scenario.context;
 
-import com.gosanon.javabotexample.api.store.IStore;
+import com.gosanon.javabotexample.api.store.IUserStateStore;
 import com.gosanon.javabotexample.api.transports.ITransport;
 
 public class EventContext {
     private final ITransport transport;
-    private IStore store;
+    private IUserStateStore store;
     public NewMessage newMessage;
 
     private boolean alreadyReplied;
@@ -28,13 +28,13 @@ public class EventContext {
     }
 
     // I shall think where I should call this.
-    public void setStore(IStore store) {
+    public void setStore(IUserStateStore store) {
         this.store = store;
     }
 
     public EventContext setState(String newStateName) {
         var userId = this.newMessage.getSenderId();
-        store.updateRecord(userId, newStateName);
+        store.updateUserState(userId, newStateName);
         return this;
     }
 
