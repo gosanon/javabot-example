@@ -54,7 +54,7 @@ class QuizTest {
         userInput.add("/quiz");
         userInput.add(incorrectInput);
         testTransport.processMessages(userInput.toArray(new String[0]));
-        assertEquals(QuizDB.get(testTransport.senderId).questionNumber, 10);
+        assertEquals(quizDB.get(testTransport.senderId).questionNumber, 10);
         testTransport.clearChatHistory();
     }
 
@@ -74,7 +74,7 @@ class QuizTest {
         userInput.add(String.valueOf(numberOfQuestions));
         userInput.addAll(userAnswers);
         testTransport.processMessages(userInput.toArray(new String[0]));
-        assertEquals(QuizDB.get(testTransport.senderId).correctAnswerNumber, numberOfCorrectAnswers);
+        assertEquals(quizDB.get(testTransport.senderId).correctAnswerNumber, numberOfCorrectAnswers);
         testTransport.clearChatHistory();
     }
 
