@@ -1,19 +1,14 @@
 package com.gosanon.javabotexample.main.quiz;
 
 public class UserQuizStats {
-    public final int questionNumber;
-    public final int answeredQuestionsNumber;
-    public final int correctAnswerNumber;
-    public final int score;
-    public final Question currentQuestion;
+    public int questionNumber;
+    public int answeredQuestionsNumber = 0;
+    public int correctAnswerNumber = 0;
+    public int score = 0;
+    public Question currentQuestion;
 
-    public UserQuizStats(int questionNumber, int answeredQuestionsNumber,
-                         int correctAnswerNumber, int score, Question currentQuestion){
+    public UserQuizStats(int questionNumber){
         this.questionNumber = questionNumber;
-        this.answeredQuestionsNumber = answeredQuestionsNumber;
-        this.correctAnswerNumber = correctAnswerNumber;
-        this.score = score;
-        this.currentQuestion = currentQuestion;
     }
 
     public String toString(){

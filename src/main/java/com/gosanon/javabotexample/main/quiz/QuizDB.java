@@ -76,17 +76,20 @@ public class QuizDB {
             leaderboard.add(id);
             return;
         }
-        if (leaderboard.contains(id))
-            leaderboard.remove(id);
+        leaderboard.remove(id);
         int count = 0;
+        var toAdd = false;
         for (var e : leaderboard){
             if (quizDB.get(e).overallStats.score < quizDB.get(id).overallStats.score) {
-                leaderboard.add(count, id);
-                return;
+                toAdd = true;
+                break;
             }
             count++;
         }
-        leaderboard.addLast(id);
+        if (toAdd)
+            leaderboard.add(count, id);
+        else
+            leaderboard.addLast(id);
     }
 
     public String printLeaderboard(){

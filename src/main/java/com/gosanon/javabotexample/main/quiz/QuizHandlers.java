@@ -21,7 +21,6 @@ public class QuizHandlers {
             errorMessage = "Бот не понял Ваш ввод, так что будет 10 вопросов.\n";
             numberOfQuestions = 10;
         }
-
         quizDB.putRecord(ctx.newMessage.getSenderId(), new UserQuizStats(numberOfQuestions));
         quizDB.currentStats(ctx.newMessage.getSenderId()).currentQuestion = questionSource;
         ctx.reply(errorMessage + "Начинаем викторину.\n\n" + quizDB
@@ -41,18 +40,18 @@ public class QuizHandlers {
     public static EventContext quizHandler(EventContext ctx, Question questionSource){
         if(ctx.notYetReplied()){
             var userId = ctx.newMessage.getSenderId();
-
             var userStats = quizDB.currentStats(userId);
             userStats.answeredQuestionsNumber++;
             var userAnswer = ctx.newMessage.getMessageText();
-            var messageAboutUserAnswer = checkAnswerAndUpdateUserStats(userAnswer, userId, questionSource);
+            var messageAboutUserAnswer = checkAnswer(userAnswer, userStats);
             if (userStats.questionNumber == userStats.answeredQuestionsNumber){
                 ctx.reply(messageAboutUserAnswer + "Викторина окончена. Итого:\n" + userStats)
-                    .setState("Default state")
-                    .sendPhoto("https://upload.wikimedia.org/wikipedia/en/e/e4/Green_tick.png");
+                        .setState("Default state")
+                        .sendPhoto("https://upload.wikimedia.org/wikipedia/en/e/e4/Green_tick.png");
                 quizDB.updateUserData(userId);
             }
             else {
+                userStats.currentQuestion = questionSource;
                 ctx.reply(messageAboutUserAnswer + "Следующий вопрос:\n" + userStats.currentQuestion.question);
             }
 
@@ -60,24 +59,14 @@ public class QuizHandlers {
         return ctx;
     }
 
-    private static String checkAnswerAndUpdateUserStats(String userAnswer, String userId, Question questionSource) {
-        var userStats = quizDB.get(userId);
-        var questionNumber = userStats.questionNumber;
-        var answeredQuestionsNumber = userStats.answeredQuestionsNumber + 1;
+    private static String checkAnswer(String userAnswer, UserQuizStats userStats) {
+
         var correctAnswer = userStats.currentQuestion.answer;
-        var correctAnswerNumber = userStats.correctAnswerNumber;
-        var score = userStats.score;
-        var question = userStats.currentQuestion;
-        var result = "";
         if (userAnswer.equalsIgnoreCase(correctAnswer)){
-            correctAnswerNumber++;
-            score += question.value;
-            result = "Правильно!\n";
+            userStats.correctAnswerNumber++;
+            userStats.score += userStats.currentQuestion.value;
+            return "Правильно!\n";
         }
-        else result = "Неправильно. Правильный ответ: " + correctAnswer + "\n";
-        question = questionSource;
-        quizDB.put(userId,
-                new UserQuizStats(questionNumber, answeredQuestionsNumber, correctAnswerNumber, score, question));
-        return result;
+        else return "Неправильно. Правильный ответ: " + correctAnswer + "\n";
     }
 }
