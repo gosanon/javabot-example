@@ -10,8 +10,7 @@ import com.gosanon.javabotexample.main.quiz.QuestionsProvider;
 
 import static com.gosanon.javabotexample.main.CommonHandlers.*;
 import static com.gosanon.javabotexample.main.Constants.*;
-import static com.gosanon.javabotexample.main.quiz.QuizHandlers.quizHandler;
-import static com.gosanon.javabotexample.main.quiz.QuizHandlers.quizPreparing;
+import static com.gosanon.javabotexample.main.quiz.QuizHandlers.*;
 
 public class Main {
 
@@ -38,6 +37,9 @@ public class Main {
                 .addCommandHandler("/quiz",
                     replyAndSetState("Введите число вопросов", "Quiz preparing")
                 )
+                .addCommandHandler("/leaderboard", reply(quizDB.printLeaderboard()))
+                .addCommandHandler("/stats",
+                        ctx -> ctx.reply(quizDB.overallStats(ctx.newMessage.getSenderId()).toString()))
                 .addContextHandler(notAnsweredThenCopy())
             )
 

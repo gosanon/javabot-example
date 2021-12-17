@@ -2,11 +2,10 @@ package com.gosanon.javabotexample.main.quiz;
 
 import com.gosanon.javabotexample.api.scenario.context.EventContext;
 
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class QuizHandlers {
-    protected static HashMap<String, UserQuizStats> quizDB = new HashMap<>();
+    public static QuizDB quizDB = new QuizDB(false);
 
     public static EventContext quizPreparing(EventContext ctx, Question questionSource){
         var numberRegex = "(^\\d+$)";
@@ -22,10 +21,11 @@ public class QuizHandlers {
             errorMessage = "Бот не понял Ваш ввод, так что будет 10 вопросов.\n";
             numberOfQuestions = 10;
         }
-        quizDB.put(ctx.newMessage.getSenderId(),
-                new UserQuizStats(numberOfQuestions, 0, 0, 0, questionSource));
+
+        quizDB.putRecord(ctx.newMessage.getSenderId(), new UserQuizStats(numberOfQuestions));
+        quizDB.currentStats(ctx.newMessage.getSenderId()).currentQuestion = questionSource;
         ctx.reply(errorMessage + "Начинаем викторину.\n\n" + quizDB
-                        .get(ctx.newMessage.getSenderId())
+                        .currentStats(ctx.newMessage.getSenderId())
                         .currentQuestion
                         .question)
                 .setState("Quiz state");
@@ -41,19 +41,16 @@ public class QuizHandlers {
     public static EventContext quizHandler(EventContext ctx, Question questionSource){
         if(ctx.notYetReplied()){
             var userId = ctx.newMessage.getSenderId();
-            var userStats = quizDB.get(userId);
+
+            var userStats = quizDB.currentStats(userId);
+            userStats.answeredQuestionsNumber++;
             var userAnswer = ctx.newMessage.getMessageText();
             var messageAboutUserAnswer = checkAnswerAndUpdateUserStats(userAnswer, userId, questionSource);
             if (userStats.questionNumber == userStats.answeredQuestionsNumber){
-                ctx.reply(messageAboutUserAnswer + String.format(
-                                """
-                                        Викторина окончена. Итого:
-                                        Всего вопросов: %d
-                                        Правильных ответов: %d
-                                        Очков набрано: %d""",
-                                userStats.questionNumber, userStats.correctAnswerNumber, userStats.score))
-                        .setState("Default state")
+                ctx.reply(messageAboutUserAnswer + "Викторина окончена. Итого:\n" + userStats)
+                    .setState("Default state")
                     .sendPhoto("https://upload.wikimedia.org/wikipedia/en/e/e4/Green_tick.png");
+                quizDB.updateUserData(userId);
             }
             else {
                 ctx.reply(messageAboutUserAnswer + "Следующий вопрос:\n" + userStats.currentQuestion.question);

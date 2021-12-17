@@ -16,4 +16,12 @@ public class UserQuizStats {
         this.currentQuestion = currentQuestion;
     }
 
+    public String toString(){
+        return String.format(
+                """
+                        Вопросов сыграно: %d
+                        Правильных ответов: %d
+                        Очков набрано: %d""",
+                this.answeredQuestionsNumber, this.correctAnswerNumber, this.score);
+    }
 }
