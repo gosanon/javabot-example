@@ -21,7 +21,7 @@ class QuizTest {
     String defaultStateName = "Default state";
     IUserStateManager runtimeDb = new RuntimeDB(defaultStateName);
     TestStringTransport testTransport = new TestStringTransport();
-    Scenario scenario = new Scenario()
+    Scenario scenario = new Scenario.Builder()
         .addScene(new Scene("Default state")
             .addCommandHandler("/start", reply(startMessage))
             .addCommandHandler("/help", reply(helpMessage))
@@ -42,6 +42,7 @@ class QuizTest {
             .addCommandHandler("/help", reply(quizHelpMessage))
             .addContextHandler(ctx -> quizHandler(ctx, QuestionProviderForTest.nextQuestion()))
         )
+        .build()
         .addTransport(testTransport)
         .initWithStore(runtimeDb);
 

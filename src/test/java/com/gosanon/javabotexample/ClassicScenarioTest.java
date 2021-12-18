@@ -21,7 +21,7 @@ class ClassicScenarioTest {
     IUserStateManager store = new RuntimeDB("DefaultState");
     TestStringTransport testTransport = new TestStringTransport();
 
-    Scenario classicScenario = new Scenario()
+    Scenario classicScenario = new Scenario.Builder()
         .addScene(new Scene("DefaultState")
             .addCommandHandler("/start", reply(startMessage))
             .addCommandHandler("/help", reply(helpMessage))
@@ -35,6 +35,7 @@ class ClassicScenarioTest {
                 replyAndSetState(secondSwitchMessage, "DefaultState"))
             .addContextHandler(notAnsweredThenCopy())
         )
+        .build()
         .addTransport(testTransport)
         .initWithStore(store);
 
