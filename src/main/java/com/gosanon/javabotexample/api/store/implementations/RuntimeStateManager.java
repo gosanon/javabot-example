@@ -4,11 +4,11 @@ import com.gosanon.javabotexample.api.store.IUserStateManager;
 
 import java.util.HashMap;
 
-public class RuntimeDB implements IUserStateManager {
+public class RuntimeStateManager implements IUserStateManager {
     private final String DEFAULT_VALUE;
     private final HashMap<String, String> db = new HashMap<>();
 
-    public RuntimeDB(String defaultValue) {
+    public RuntimeStateManager(String defaultValue) {
         this.DEFAULT_VALUE = defaultValue;
     }
 
@@ -21,8 +21,8 @@ public class RuntimeDB implements IUserStateManager {
         return db.get(userId);
     }
 
-    public void resetUserState(String id) {
-        db.put(id, DEFAULT_VALUE);
+    public void resetUserState(String userId) {
+        db.put(userId, DEFAULT_VALUE);
     }
 
     public void updateUserState(String userId, String stateName) {

@@ -3,7 +3,7 @@ package com.gosanon.javabotexample.main;
 import com.gosanon.javabotexample.api.scenario.Scene;
 import com.gosanon.javabotexample.api.scenario.Scenario;
 import com.gosanon.javabotexample.api.store.IUserStateManager;
-import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
+import com.gosanon.javabotexample.api.store.implementations.RuntimeStateManager;
 import com.gosanon.javabotexample.api.transports.ITransport;
 import com.gosanon.javabotexample.api.transports.implementations.TgTransport;
 import com.gosanon.javabotexample.main.quiz.QuestionsProvider;
@@ -20,7 +20,7 @@ public class Main {
 
         // Prepare data and db
         String TOKEN = System.getenv("JAVABOT_TOKEN_TG");
-        IUserStateManager runtimeDb = new RuntimeDB(defaultStateName);
+        IUserStateManager runtimeDb = new RuntimeStateManager(defaultStateName);
 
         // Init transports
         ITransport tgBot = new TgTransport(TOKEN);
@@ -37,7 +37,7 @@ public class Main {
                 .addCommandHandler("/quiz",
                     replyAndSetState("Введите число вопросов", "Quiz preparing")
                 )
-                .addCommandHandler("/leaderboard", reply(quizDB.printLeaderboard()))
+                .addCommandHandler("/leaderboard", reply(quizDB.getLeaderboardString()))
                 .addCommandHandler("/stats",
                         ctx -> ctx.reply(quizDB.overallStats(ctx.newMessage.getSenderId()).toString()))
                 .addContextHandler(notAnsweredThenCopy())

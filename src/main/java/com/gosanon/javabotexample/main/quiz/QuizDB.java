@@ -92,7 +92,7 @@ public class QuizDB {
             leaderboard.addLast(id);
     }
 
-    public String printLeaderboard(){
+    public String getLeaderboardString(){
         var result = new StringBuilder("Список лидеров:\n");
         var count = 1;
         for (var e : leaderboard){

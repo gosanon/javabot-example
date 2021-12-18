@@ -3,7 +3,7 @@ package com.gosanon.javabotexample.main.quiz;
 import com.gosanon.javabotexample.api.scenario.Scene;
 import com.gosanon.javabotexample.api.scenario.Scenario;
 import com.gosanon.javabotexample.api.store.IUserStateManager;
-import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
+import com.gosanon.javabotexample.api.store.implementations.RuntimeStateManager;
 import com.gosanon.javabotexample.transports.implementations.TestStringTransport;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuizTest {
     String defaultStateName = "Default state";
-    IUserStateManager runtimeDb = new RuntimeDB(defaultStateName);
+    IUserStateManager runtimeDb = new RuntimeStateManager(defaultStateName);
     TestStringTransport testTransport = new TestStringTransport();
     Scenario scenario = new Scenario.Builder()
         .addScene(new Scene("Default state")
@@ -28,7 +28,7 @@ class QuizTest {
             .addCommandHandler("/quiz",
                replyAndSetState("Введите число вопросов", "Quiz preparing")
             )
-            .addCommandHandler("/leaderboard", reply(quizDB.printLeaderboard()))
+            .addCommandHandler("/leaderboard", reply(quizDB.getLeaderboardString()))
             .addContextHandler(notAnsweredThenCopy())
             )
         .addScene(new Scene("Quiz preparing")
