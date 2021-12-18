@@ -2,71 +2,70 @@ package com.gosanon.javabotexample.main.quiz;
 
 import com.gosanon.javabotexample.api.scenario.context.EventContext;
 
-import java.util.regex.Pattern;
+import static com.gosanon.javabotexample.main.Constants.*;
 
 public class QuizHandlers {
-    public static QuizDB quizDB = new QuizDB(false);
+    public static QuizDB quizDB = new QuizDB(true);
 
     public static EventContext quizPreparing(EventContext ctx, Question questionSource){
-        var numberRegex = "(^\\d+$)";
         var numberOfQuestions = 0;
-        var errorMessage = "";
+        var startMessage = "Начинаем викторину.\n\n";
         try {
-            numberOfQuestions = Integer.parseInt(
-                    findMatchByRegex(numberRegex, ctx.newMessage.getMessageText()));
+            numberOfQuestions = Integer.parseInt(ctx.newMessage.getMessageText());
             if(numberOfQuestions < 1)
-                throw new Exception("Ненатуральное число");
+                throw new IllegalArgumentException("Введено ненатуральное число");
         }
         catch (Exception e){
-            errorMessage = "Бот не понял Ваш ввод, так что будет 10 вопросов.\n";
+            startMessage = INCORRECT_INPUT_WARNING + startMessage;
             numberOfQuestions = 10;
         }
-        quizDB.putRecord(ctx.newMessage.getSenderId(), new UserQuizStats(numberOfQuestions));
-        quizDB.currentStats(ctx.newMessage.getSenderId()).currentQuestion = questionSource;
-        ctx.reply(errorMessage + "Начинаем викторину.\n\n" + quizDB
-                        .currentStats(ctx.newMessage.getSenderId())
+        quizDB.putRecord(ctx.newMessage.getSenderId(),
+                new CurrentQuizStats(numberOfQuestions, 0, 0, 0, questionSource));
+        ctx.reply(startMessage + quizDB
+                        .getCurrentQuizStats(ctx.newMessage.getSenderId())
                         .currentQuestion
                         .question)
                 .setState("Quiz state");
         return ctx;
     }
 
-    static String findMatchByRegex(String regex, String text){
-        var pattern = Pattern.compile(regex);
-        var matcher = pattern.matcher(text);
-        return matcher.find() ? matcher.group(1) : "";
-    }
-
     public static EventContext quizHandler(EventContext ctx, Question questionSource){
         if(ctx.notYetReplied()){
             var userId = ctx.newMessage.getSenderId();
-            var userStats = quizDB.currentStats(userId);
-            userStats.answeredQuestionsNumber++;
             var userAnswer = ctx.newMessage.getMessageText();
-            var messageAboutUserAnswer = checkAnswer(userAnswer, userStats);
-            if (userStats.questionNumber == userStats.answeredQuestionsNumber){
-                ctx.reply(messageAboutUserAnswer + "Викторина окончена. Итого:\n" + userStats)
+            var messageAboutUserAnswer = checkAnswer(userAnswer, userId, questionSource);
+            var userStats = quizDB.getCurrentQuizStats(userId);
+            if (userStats.questionsInQuiz == userStats.answeredQuestionsNumber){
+                ctx.reply(String.format(QUIZ_PASS_MESSAGE, messageAboutUserAnswer, userStats))
                         .setState("Default state")
-                        .sendPhoto("https://upload.wikimedia.org/wikipedia/en/e/e4/Green_tick.png");
-                quizDB.updateUserData(userId);
+                        .sendPhoto(QUIZ_PASS_IMAGE_URL);
+                quizDB.updateUserStats(userId);
             }
             else {
-                userStats.currentQuestion = questionSource;
-                ctx.reply(messageAboutUserAnswer + "Следующий вопрос:\n" + userStats.currentQuestion.question);
+                ctx.reply(String.format(NEXT_QUESTION_MESSAGE,
+                        messageAboutUserAnswer, userStats.currentQuestion.question));
             }
-
         }
         return ctx;
     }
 
-    private static String checkAnswer(String userAnswer, UserQuizStats userStats) {
-
+    private static String checkAnswer(String userAnswer, String userId, Question questionSource) {
+        var result = "";
+        var userStats = quizDB.getCurrentQuizStats(userId);
+        var questionNumber = userStats.questionsInQuiz;
+        var answeredQuestionsNumber = userStats.answeredQuestionsNumber + 1;
+        var correctAnswerNumber = userStats.correctAnswerNumber;
+        var score = userStats.score;
         var correctAnswer = userStats.currentQuestion.answer;
         if (userAnswer.equalsIgnoreCase(correctAnswer)){
-            userStats.correctAnswerNumber++;
-            userStats.score += userStats.currentQuestion.value;
-            return "Правильно!\n";
+            correctAnswerNumber++;
+            score += userStats.currentQuestion.value;
+            result = CORRECT_ANSWER_MESSAGE;
         }
-        else return "Неправильно. Правильный ответ: " + correctAnswer + "\n";
+        else result = String.format(WRONG_ANSWER_MESSAGE, correctAnswer);
+        var a = new CurrentQuizStats(
+                questionNumber, answeredQuestionsNumber, correctAnswerNumber, score, questionSource);
+        quizDB.putRecord(userId, a);
+        return result;
     }
 }

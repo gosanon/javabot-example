@@ -23,12 +23,12 @@ class QuizTest {
     TestStringTransport testTransport = new TestStringTransport();
     StateScenario scenario = new StateScenario()
             .addState(new State("Default state")
-                .addCommandHandler("/start", reply(startMessage))
-                .addCommandHandler("/help", reply(helpMessage))
+                .addCommandHandler("/start", reply(START_MESSAGE))
+                .addCommandHandler("/help", reply(HELP_MESSAGE))
                 .addCommandHandler("/quiz",
                    replyAndSetState("Введите число вопросов", "Quiz preparing")
                 )
-                .addCommandHandler("/leaderboard", reply(quizDB.printLeaderboard()))
+                .addCommandHandler("/leaderboard", reply(quizDB.leaderboard.toString()))
                 .addContextHandler(notAnsweredThenCopy())
                 )
             .addState(new State("Quiz preparing")
@@ -39,7 +39,7 @@ class QuizTest {
                 .addCommandHandler("/exit",
                    replyAndSetState("Отменяем викторину", "Default state")
                 )
-                .addCommandHandler("/help", reply(quizHelpMessage))
+                .addCommandHandler("/help", reply(QUIZ_HELP_MESSAGE))
                 .addContextHandler(ctx -> quizHandler(ctx, QuestionProviderForTest.nextQuestion()))
             )
             .addTransport(testTransport)
@@ -57,14 +57,14 @@ class QuizTest {
     public void makeQuizOf10QuestionsIfInputIsNotANumber() {
         testTransport.senderId = "Charlie";
         runQuiz(Arrays.asList("Я ввёл не число"), false);
-        assertEquals(10, quizDB.currentStats(testTransport.senderId).questionNumber);
+        assertEquals(10, quizDB.getCurrentQuizStats(testTransport.senderId).questionsInQuiz);
     }
 
     @Test
     public void makeQuizOf10QuestionsIfInputIsNotNatural() {
         testTransport.senderId = "Donald";
-        runQuiz(Arrays.asList("Я ввёл не число"), false);
-        assertEquals(10, quizDB.currentStats(testTransport.senderId).questionNumber);
+        runQuiz(Arrays.asList("-15"), false);
+        assertEquals(10, quizDB.getCurrentQuizStats(testTransport.senderId).questionsInQuiz);
     }
 
     public void runQuiz(List<String> userAnswers, boolean addSize) {
@@ -87,7 +87,7 @@ class QuizTest {
             userAnswers.add("Я не знаю");
         }
         runQuiz(userAnswers, true);
-        assertEquals(0, quizDB.overallStats(testTransport.senderId).correctAnswerNumber);
+        assertEquals(0, quizDB.getOverallStats(testTransport.senderId).correctAnswerNumber);
     }
 
     @Test
@@ -99,7 +99,7 @@ class QuizTest {
             userAnswers.add(QuestionProviderForTest.questions.get(i).answer);
         }
         runQuiz(userAnswers, true);
-        assertEquals(numberOfQuestions, quizDB.overallStats(testTransport.senderId).correctAnswerNumber);
+        assertEquals(numberOfQuestions, quizDB.getOverallStats(testTransport.senderId).correctAnswerNumber);
     }
 
     @Test
@@ -151,9 +151,9 @@ class QuizTest {
         }
         for (int i = 0; i < repeats; i++)
             runQuiz(userInput, true);
-        assertEquals(repeats * numberOfQuestions, quizDB.overallStats(id).questionNumber);
-        assertEquals(repeats * numberOfQuestions, quizDB.overallStats(id).correctAnswerNumber);
-        assertEquals(repeats * score, quizDB.overallStats(id).score);
+        assertEquals(repeats * numberOfQuestions, quizDB.getOverallStats(id).answeredQuestionsNumber);
+        assertEquals(repeats * numberOfQuestions, quizDB.getOverallStats(id).correctAnswerNumber);
+        assertEquals(repeats * score, quizDB.getOverallStats(id).score);
     }
 
 }

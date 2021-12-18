@@ -10,15 +10,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class QuizDB {
-    protected static String dbFileName = "src/main/java/com/gosanon/javabotexample/main/quiz/quizDB.json";
-    protected boolean isTemporal;
-    protected HashMap<String, StatsList> quizDB = new HashMap<>();
-    protected LinkedList<String> leaderboard = new LinkedList<>();
-    public UserQuizStats overallStats(String id){ return quizDB.get(id).overallStats; }
-    public UserQuizStats currentStats(String id){ return quizDB.get(id).currentStats; }
+    private final static String dbFileName = "src/main/java/com/gosanon/javabotexample/main/quiz/quizDB.json";
+    private final boolean isTemporal;
+    private HashMap<String, StatsList> quizDB = new HashMap<>();
+    public Leaderboard leaderboard = new Leaderboard();
+    public UserQuizStats getOverallStats(String id){ return quizDB.get(id).overallStats; }
+    public CurrentQuizStats getCurrentQuizStats(String id){ return quizDB.get(id).currentQuizStats; }
 
     public QuizDB(boolean isTemporal){
         this.isTemporal = isTemporal;
@@ -41,33 +40,35 @@ public class QuizDB {
         }
     }
 
-    public void putRecord(String id, UserQuizStats stats){
+    public void putRecord(String id, CurrentQuizStats stats){
         if (quizDB.containsKey(id))
-            quizDB.get(id).currentStats = stats;
+            quizDB.get(id).currentQuizStats = stats;
         else {
             var statsList = new StatsList(stats);
             quizDB.put(id, statsList);
         }
+        if (!isTemporal) {
+            saveQuizDB();
+        }
     }
 
-    public void updateUserData(String id){
-        var overall = quizDB.get(id).overallStats;
-        var current = quizDB.get(id).currentStats;
-        overall.questionNumber += current.questionNumber;
-        overall.answeredQuestionsNumber += current.answeredQuestionsNumber;
-        overall.correctAnswerNumber += current.correctAnswerNumber;
-        overall.score += current.score;
-        overall.currentQuestion = current.currentQuestion;
-        quizDB.get(id).currentStats = new UserQuizStats(0);
+    public void updateUserStats(String id){
+        quizDB.get(id).overallStats = quizDB.get(id).overallStats.
+                updateStatsWith(quizDB.get(id).currentQuizStats);
+        quizDB.get(id).currentQuizStats = new CurrentQuizStats();
         updateLeaderboard(id);
         if (!isTemporal) {
-            var gson = new Gson();
-            var content = gson.toJson(quizDB);
-            try {
-                Files.writeString(Path.of(dbFileName), content, StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            saveQuizDB();
+        }
+    }
+
+    public void saveQuizDB(){
+        var gson = new Gson();
+        var content = gson.toJson(quizDB);
+        try {
+            Files.writeString(Path.of(dbFileName), content, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -77,31 +78,18 @@ public class QuizDB {
             return;
         }
         leaderboard.remove(id);
-        int count = 0;
-        var toAdd = false;
+        var count = 0;
+        var scoreIsMinimal = true;
         for (var e : leaderboard){
             if (quizDB.get(e).overallStats.score < quizDB.get(id).overallStats.score) {
-                toAdd = true;
+                scoreIsMinimal = false;
                 break;
             }
             count++;
         }
-        if (toAdd)
+        if (!scoreIsMinimal)
             leaderboard.add(count, id);
         else
             leaderboard.addLast(id);
     }
-
-    public String printLeaderboard(){
-        var result = new StringBuilder("Список лидеров:\n");
-        var count = 1;
-        for (var e : leaderboard){
-            var stats = quizDB.get(e).overallStats;
-            result.append(String.format("%d. %s - %d%n", count, e, stats.score));
-            count++;
-        }
-
-        return result.toString();
-    }
-
 }

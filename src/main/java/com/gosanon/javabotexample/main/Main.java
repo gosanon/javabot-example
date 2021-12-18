@@ -32,14 +32,14 @@ public class Main {
             .addState(new State("Default state")
 
                 // Add handlers
-                .addCommandHandler("/start", reply(startMessage))
-                .addCommandHandler("/help", reply(helpMessage))
+                .addCommandHandler("/start", reply(START_MESSAGE))
+                .addCommandHandler("/help", reply(HELP_MESSAGE))
                 .addCommandHandler("/quiz",
                     replyAndSetState("Введите число вопросов", "Quiz preparing")
                 )
                 .addCommandHandler("/leaderboard", reply(quizDB.printLeaderboard()))
                 .addCommandHandler("/stats",
-                        ctx -> ctx.reply(quizDB.overallStats(ctx.newMessage.getSenderId()).toString()))
+                        ctx -> ctx.reply(quizDB.getOverallStats(ctx.newMessage.getSenderId()).toString()))
                 .addContextHandler(notAnsweredThenCopy())
             )
 
@@ -51,7 +51,7 @@ public class Main {
                 .addCommandHandler("/exit",
                     replyAndSetState("Отменяем викторину", "Default state")
                 )
-                .addCommandHandler("/help", reply(quizHelpMessage))
+                .addCommandHandler("/help", reply(QUIZ_HELP_MESSAGE))
                 .addContextHandler(ctx -> quizHandler(ctx, QuestionsProvider.nextQuestion()))
             )
 
