@@ -7,14 +7,13 @@ import com.gosanon.javabotexample.api.transports.ITransport;
 import java.util.HashMap;
 
 public class Scenario {
-    private final HashMap<String, Scene> scenes = new HashMap<>();
-    private final HashMap<String, ContextHandler> scenesHandlers = new HashMap<>();
+    private final HashMap<String, Scene> scenes;
+    private HashMap<String, ContextHandler> scenesHandlers;
 
     public ContextHandler complexScenarioHandler = ctx -> ctx;
 
-    public Scenario addScene(Scene scene) {
-        scenes.put(scene.getName(), scene);
-        return this;
+    public Scenario(Builder scenarioBuilderObject) {
+        this.scenes = scenarioBuilderObject.scenes;
     }
 
     public Scenario addTransport(ITransport transport) {
@@ -38,5 +37,18 @@ public class Scenario {
         };
 
         return this;
+    }
+
+    public static class Builder {
+        private final HashMap<String, Scene> scenes = new HashMap<>();
+
+        public Builder addScene(Scene scene) {
+            scenes.put(scene.getName(), scene);
+            return this;
+        }
+
+        public Scenario build() {
+            return new Scenario(this);
+        }
     }
 }

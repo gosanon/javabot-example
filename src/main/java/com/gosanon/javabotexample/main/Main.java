@@ -25,8 +25,8 @@ public class Main {
         // Init transports
         ITransport tgBot = new TgTransport(TOKEN);
 
-        // Create scenario
-        new Scenario()
+        // Create scenario builder
+        new Scenario.Builder()
 
             // Add states
             .addScene(new Scene("Default state")
@@ -54,6 +54,9 @@ public class Main {
                 .addCommandHandler("/help", reply(quizHelpMessage))
                 .addContextHandler(ctx -> quizHandler(ctx, QuestionsProvider.nextQuestion()))
             )
+
+            // Stop building
+            .build()
 
             // Add transports
             .addTransport(tgBot)
