@@ -27,7 +27,7 @@ public class QuizHandlers {
                         .currentStats(ctx.newMessage.getSenderId())
                         .currentQuestion
                         .question)
-                .setState("Quiz state");
+                .toScene("Quiz state");
         return ctx;
     }
 
@@ -46,7 +46,7 @@ public class QuizHandlers {
             var messageAboutUserAnswer = checkAnswer(userAnswer, userStats);
             if (userStats.questionNumber == userStats.answeredQuestionsNumber){
                 ctx.reply(messageAboutUserAnswer + "Викторина окончена. Итого:\n" + userStats)
-                        .setState("Default state")
+                        .toScene("Default state")
                         .sendPhoto("https://upload.wikimedia.org/wikipedia/en/e/e4/Green_tick.png");
                 quizDB.updateUserData(userId);
             }

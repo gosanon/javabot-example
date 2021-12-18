@@ -1,10 +1,10 @@
 package com.gosanon.javabotexample.api.store.implementations;
 
-import com.gosanon.javabotexample.api.store.IUserStateStore;
+import com.gosanon.javabotexample.api.store.IUserStateManager;
 
 import java.util.HashMap;
 
-public class RuntimeDB implements IUserStateStore {
+public class RuntimeDB implements IUserStateManager {
     private final String DEFAULT_VALUE;
     private final HashMap<String, String> db = new HashMap<>();
 
@@ -27,10 +27,6 @@ public class RuntimeDB implements IUserStateStore {
 
     public void updateUserState(String userId, String stateName) {
         db.put(userId, stateName);
-    }
-
-    public void deleteUserStateData(String userId) {
-        db.remove(userId);
     }
 }
 

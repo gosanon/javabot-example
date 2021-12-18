@@ -1,7 +1,7 @@
 package com.gosanon.javabotexample.api.store;
 
-public interface IUserStore <TUserObject> extends IUserStateStore {
-    void resetUserData(String userId);
+public interface IUserStore <TUserObject> extends IUserStateManager {
     TUserObject getUserData(String userId);
-    TUserObject setUserData(String userId, TUserObject userData);
+    void resetUserData(String userId);
+    TUserObject updateUserData(String userId, TUserObject userData);
 }

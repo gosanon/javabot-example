@@ -1,8 +1,8 @@
 package com.gosanon.javabotexample.main;
 
-import com.gosanon.javabotexample.api.scenario.State;
-import com.gosanon.javabotexample.api.scenario.StateScenario;
-import com.gosanon.javabotexample.api.store.IUserStateStore;
+import com.gosanon.javabotexample.api.scenario.Scene;
+import com.gosanon.javabotexample.api.scenario.Scenario;
+import com.gosanon.javabotexample.api.store.IUserStateManager;
 import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
 import com.gosanon.javabotexample.api.transports.ITransport;
 import com.gosanon.javabotexample.api.transports.implementations.TgTransport;
@@ -20,16 +20,16 @@ public class Main {
 
         // Prepare data and db
         String TOKEN = System.getenv("JAVABOT_TOKEN_TG");
-        IUserStateStore runtimeDb = new RuntimeDB(defaultStateName);
+        IUserStateManager runtimeDb = new RuntimeDB(defaultStateName);
 
         // Init transports
         ITransport tgBot = new TgTransport(TOKEN);
 
         // Create scenario
-        new StateScenario()
+        new Scenario()
 
             // Add states
-            .addState(new State("Default state")
+            .addScene(new Scene("Default state")
 
                 // Add handlers
                 .addCommandHandler("/start", reply(startMessage))
@@ -43,11 +43,11 @@ public class Main {
                 .addContextHandler(notAnsweredThenCopy())
             )
 
-            .addState(new State("Quiz preparing")
+            .addScene(new Scene("Quiz preparing")
                 .addContextHandler(ctx -> quizPreparing(ctx, QuestionsProvider.nextQuestion()))
             )
 
-            .addState(new State("Quiz state")
+            .addScene(new Scene("Quiz state")
                 .addCommandHandler("/exit",
                     replyAndSetState("Отменяем викторину", "Default state")
                 )
