@@ -22,28 +22,28 @@ class QuizTest {
     IUserStateManager runtimeDb = new RuntimeDB(defaultStateName);
     TestStringTransport testTransport = new TestStringTransport();
     Scenario scenario = new Scenario()
-            .addScene(new Scene("Default state")
-                .addCommandHandler("/start", reply(startMessage))
-                .addCommandHandler("/help", reply(helpMessage))
-                .addCommandHandler("/quiz",
-                   replyAndSetState("Введите число вопросов", "Quiz preparing")
-                )
-                .addCommandHandler("/leaderboard", reply(quizDB.printLeaderboard()))
-                .addContextHandler(notAnsweredThenCopy())
-                )
-            .addScene(new Scene("Quiz preparing")
-                .addContextHandler(ctx -> quizPreparing(ctx, QuestionProviderForTest.nextQuestion()))
+        .addScene(new Scene("Default state")
+            .addCommandHandler("/start", reply(startMessage))
+            .addCommandHandler("/help", reply(helpMessage))
+            .addCommandHandler("/quiz",
+               replyAndSetState("Введите число вопросов", "Quiz preparing")
             )
+            .addCommandHandler("/leaderboard", reply(quizDB.printLeaderboard()))
+            .addContextHandler(notAnsweredThenCopy())
+            )
+        .addScene(new Scene("Quiz preparing")
+            .addContextHandler(ctx -> quizPreparing(ctx, QuestionProviderForTest.nextQuestion()))
+        )
 
-            .addScene(new Scene("Quiz state")
-                .addCommandHandler("/exit",
-                   replyAndSetState("Отменяем викторину", "Default state")
-                )
-                .addCommandHandler("/help", reply(quizHelpMessage))
-                .addContextHandler(ctx -> quizHandler(ctx, QuestionProviderForTest.nextQuestion()))
+        .addScene(new Scene("Quiz state")
+            .addCommandHandler("/exit",
+               replyAndSetState("Отменяем викторину", "Default state")
             )
-            .addTransport(testTransport)
-            .initWithStore(runtimeDb);
+            .addCommandHandler("/help", reply(quizHelpMessage))
+            .addContextHandler(ctx -> quizHandler(ctx, QuestionProviderForTest.nextQuestion()))
+        )
+        .addTransport(testTransport)
+        .initWithStore(runtimeDb);
 
     @Test
     public void quizIsAvailable() {
