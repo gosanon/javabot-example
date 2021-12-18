@@ -1,9 +1,9 @@
 package com.gosanon.javabotexample.main;
 
-import com.gosanon.javabotexample.api.scenario.State;
-import com.gosanon.javabotexample.api.scenario.StateScenario;
-import com.gosanon.javabotexample.api.store.IUserStateStore;
-import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
+import com.gosanon.javabotexample.api.scenario.Scene;
+import com.gosanon.javabotexample.api.scenario.Scenario;
+import com.gosanon.javabotexample.api.store.IUserStateManager;
+import com.gosanon.javabotexample.api.store.implementations.RuntimeStateManager;
 import com.gosanon.javabotexample.api.transports.ITransport;
 import com.gosanon.javabotexample.api.transports.implementations.TgTransport;
 import com.gosanon.javabotexample.main.quiz.QuestionsProvider;
@@ -20,16 +20,16 @@ public class Main {
 
         // Prepare data and db
         String TOKEN = System.getenv("JAVABOT_TOKEN_TG");
-        IUserStateStore runtimeDb = new RuntimeDB(defaultStateName);
+        IUserStateManager runtimeDb = new RuntimeStateManager(defaultStateName);
 
         // Init transports
         ITransport tgBot = new TgTransport(TOKEN);
 
-        // Create scenario
-        new StateScenario()
+        // Create scenario builder
+        new Scenario.Builder()
 
             // Add states
-            .addState(new State("Default state")
+            .addScene(new Scene("Default state")
 
                 // Add handlers
                 .addCommandHandler("/start", reply(START_MESSAGE))
@@ -37,23 +37,25 @@ public class Main {
                 .addCommandHandler("/quiz",
                     replyAndSetState("Введите число вопросов", "Quiz preparing")
                 )
-                .addCommandHandler("/leaderboard", reply(quizDB.printLeaderboard()))
+                .addCommandHandler("/leaderboard", reply(quizDB.leaderboard.toString()))
                 .addCommandHandler("/stats",
                         ctx -> ctx.reply(quizDB.getOverallStats(ctx.newMessage.getSenderId()).toString()))
                 .addContextHandler(notAnsweredThenCopy())
             )
 
-            .addState(new State("Quiz preparing")
+            .addScene(new Scene("Quiz preparing")
                 .addContextHandler(ctx -> quizPreparing(ctx, QuestionsProvider.nextQuestion()))
             )
 
-            .addState(new State("Quiz state")
+            .addScene(new Scene("Quiz state")
                 .addCommandHandler("/exit",
                     replyAndSetState("Отменяем викторину", "Default state")
                 )
                 .addCommandHandler("/help", reply(QUIZ_HELP_MESSAGE))
                 .addContextHandler(ctx -> quizHandler(ctx, QuestionsProvider.nextQuestion()))
             )
+            // Stop building
+            .build()
 
             // Add transports
             .addTransport(tgBot)

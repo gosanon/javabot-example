@@ -5,7 +5,7 @@ import com.gosanon.javabotexample.api.scenario.context.EventContext;
 import static com.gosanon.javabotexample.main.Constants.*;
 
 public class QuizHandlers {
-    public static QuizDB quizDB = new QuizDB(true);
+    public static QuizDB quizDB = new QuizDB(false);
 
     public static EventContext quizPreparing(EventContext ctx, Question questionSource){
         var numberOfQuestions = 0;
@@ -25,7 +25,7 @@ public class QuizHandlers {
                         .getCurrentQuizStats(ctx.newMessage.getSenderId())
                         .currentQuestion
                         .question)
-                .setState("Quiz state");
+                .toScene("Quiz state");
         return ctx;
     }
 
