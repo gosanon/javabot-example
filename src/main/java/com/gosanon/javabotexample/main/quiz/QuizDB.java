@@ -13,29 +13,25 @@ import java.util.HashMap;
 
 public class QuizDB {
     private final static String dbFileName = "src/main/java/com/gosanon/javabotexample/main/quiz/quizDB.json";
-    private final boolean isTemporal;
     private HashMap<String, StatsList> quizDB = new HashMap<>();
     public Leaderboard leaderboard = new Leaderboard();
     public UserQuizStats getOverallStats(String id){ return quizDB.get(id).overallStats; }
     public CurrentQuizStats getCurrentQuizStats(String id){ return quizDB.get(id).currentQuizStats; }
 
-    public QuizDB(boolean isTemporal){
-        this.isTemporal = isTemporal;
-        if (!isTemporal){
-            var cwd = Paths.get(".").toAbsolutePath().normalize();
-            var dbFile = cwd.resolve(dbFileName);
-            if (Files.exists(dbFile)) {
-                try {
-                    var content = Files.readString(dbFile, StandardCharsets.UTF_8);
-                    var gson = new Gson();
-                    Type type = new TypeToken<HashMap<String, StatsList>>(){}.getType();
-                    quizDB = gson.fromJson(content, type);
-                    for (var id : quizDB.keySet()) {
-                        updateLeaderboard(id);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+    public QuizDB(){
+        var cwd = Paths.get(".").toAbsolutePath().normalize();
+        var dbFile = cwd.resolve(dbFileName);
+        if (Files.exists(dbFile)) {
+            try {
+                var content = Files.readString(dbFile, StandardCharsets.UTF_8);
+                var gson = new Gson();
+                Type type = new TypeToken<HashMap<String, StatsList>>(){}.getType();
+                quizDB = gson.fromJson(content, type);
+                for (var id : quizDB.keySet()) {
+                    updateLeaderboard(id);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -47,9 +43,7 @@ public class QuizDB {
             var statsList = new StatsList(stats);
             quizDB.put(id, statsList);
         }
-        if (!isTemporal) {
-            saveQuizDB();
-        }
+        saveQuizDB();
     }
 
     public void updateUserStats(String id){
@@ -57,9 +51,7 @@ public class QuizDB {
                 updateStatsWith(quizDB.get(id).currentQuizStats);
         quizDB.get(id).currentQuizStats = new CurrentQuizStats();
         updateLeaderboard(id);
-        if (!isTemporal) {
-            saveQuizDB();
-        }
+        saveQuizDB();
     }
 
     public void saveQuizDB(){
