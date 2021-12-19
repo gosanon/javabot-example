@@ -37,7 +37,7 @@ public class QuizHandlers {
             var userStats = quizDB.getCurrentQuizStats(userId);
             if (userStats.questionsInQuiz == userStats.answeredQuestionsNumber){
                 ctx.reply(String.format(QUIZ_PASS_MESSAGE, messageAboutUserAnswer, userStats))
-                        .setState("Default state")
+                        .toScene("Default state")
                         .sendPhoto(QUIZ_PASS_IMAGE_URL);
                 quizDB.updateUserStats(userId);
             }

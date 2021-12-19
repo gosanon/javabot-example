@@ -1,9 +1,9 @@
 package com.gosanon.javabotexample.main.quiz;
 
-import com.gosanon.javabotexample.api.scenario.State;
-import com.gosanon.javabotexample.api.scenario.StateScenario;
-import com.gosanon.javabotexample.api.store.IUserStateStore;
-import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
+import com.gosanon.javabotexample.api.scenario.Scene;
+import com.gosanon.javabotexample.api.scenario.Scenario;
+import com.gosanon.javabotexample.api.store.IUserStateManager;
+import com.gosanon.javabotexample.api.store.implementations.RuntimeStateManager;
 import com.gosanon.javabotexample.transports.implementations.TestStringTransport;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuizTest {
     String defaultStateName = "Default state";
-    IUserStateStore runtimeDb = new RuntimeDB(defaultStateName);
+    IUserStateManager runtimeDb = new RuntimeStateManager(defaultStateName);
     TestStringTransport testTransport = new TestStringTransport();
-    StateScenario scenario = new StateScenario()
-            .addState(new State("Default state")
+    Scenario scenario = new Scenario.Builder()
+            .addScene(new Scene("Default state")
                 .addCommandHandler("/start", reply(START_MESSAGE))
                 .addCommandHandler("/help", reply(HELP_MESSAGE))
                 .addCommandHandler("/quiz",
@@ -31,17 +31,18 @@ class QuizTest {
                 .addCommandHandler("/leaderboard", reply(quizDB.leaderboard.toString()))
                 .addContextHandler(notAnsweredThenCopy())
                 )
-            .addState(new State("Quiz preparing")
+            .addScene(new Scene("Quiz preparing")
                 .addContextHandler(ctx -> quizPreparing(ctx, QuestionProviderForTest.nextQuestion()))
             )
 
-            .addState(new State("Quiz state")
+            .addScene(new Scene("Quiz state")
                 .addCommandHandler("/exit",
                    replyAndSetState("Отменяем викторину", "Default state")
                 )
                 .addCommandHandler("/help", reply(QUIZ_HELP_MESSAGE))
                 .addContextHandler(ctx -> quizHandler(ctx, QuestionProviderForTest.nextQuestion()))
             )
+            .build()
             .addTransport(testTransport)
             .initWithStore(runtimeDb);
 
