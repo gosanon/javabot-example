@@ -1,14 +1,13 @@
 package com.gosanon.javabotexample.api.transports;
 
-import com.gosanon.javabotexample.api.scenario.ScenarioHandler;
-import com.gosanon.javabotexample.api.scenario.StateScenario;
+import com.gosanon.javabotexample.api.scenario.Scenario;
 
 import java.util.ArrayList;
 
 public abstract class CommonTransport implements ITransport {
-    protected final ArrayList<StateScenario> boundScenarios = new ArrayList<>();
+    protected final ArrayList<Scenario> boundScenarios = new ArrayList<>();
 
-    public void bindScenarioHandler(StateScenario scenario) {
+    public void bindScenarioHandler(Scenario scenario) {
         boundScenarios.add(scenario);
     }
 

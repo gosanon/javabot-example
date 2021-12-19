@@ -5,13 +5,13 @@ import com.gosanon.javabotexample.api.scenario.context.ContextHandler;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class State {
+public class Scene {
     String name;
 
     private final Map<String, ContextHandler> handlers = new LinkedHashMap<>();
     private int lastHandlerId = 0;
 
-    public State(String name) {
+    public Scene(String name) {
         this.name = name;
     }
 
@@ -19,13 +19,14 @@ public class State {
         return this.name;
     }
 
-    public State addContextHandler(ContextHandler handler) {
+    public Scene addContextHandler(ContextHandler handler) {
         var handlerId = String.format("JAVABOT_HANDLER_%d", lastHandlerId);
+        lastHandlerId++;
         handlers.put(handlerId, handler);
         return this;
     }
 
-    public State addCommandHandler(String commandText, ContextHandler handler) {
+    public Scene addCommandHandler(String commandText, ContextHandler handler) {
         handlers.put(commandText, ctx -> {
             if (ctx.newMessage.getMessageText().equals(commandText)) {
                 return handler.apply(ctx);

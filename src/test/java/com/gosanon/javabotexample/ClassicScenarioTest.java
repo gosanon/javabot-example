@@ -1,9 +1,9 @@
 package com.gosanon.javabotexample;
 
-import com.gosanon.javabotexample.api.scenario.State;
-import com.gosanon.javabotexample.api.scenario.StateScenario;
-import com.gosanon.javabotexample.api.store.IUserStateStore;
-import com.gosanon.javabotexample.api.store.implementations.RuntimeDB;
+import com.gosanon.javabotexample.api.scenario.Scene;
+import com.gosanon.javabotexample.api.scenario.Scenario;
+import com.gosanon.javabotexample.api.store.IUserStateManager;
+import com.gosanon.javabotexample.api.store.implementations.RuntimeStateManager;
 import com.gosanon.javabotexample.transports.implementations.TestStringTransport;
 import org.junit.jupiter.api.Test;
 
@@ -18,11 +18,11 @@ class ClassicScenarioTest {
     String photoURL = "https://ru.wikipedia.org/wiki/" +
             "%D0%9A%D0%BE%D1%88%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Cat_poster_1.jpg";
 
-    IUserStateStore store = new RuntimeDB("DefaultState");
+    IUserStateManager store = new RuntimeStateManager("DefaultState");
     TestStringTransport testTransport = new TestStringTransport();
 
-    StateScenario classicScenario = new StateScenario()
-        .addState(new State("DefaultState")
+    Scenario classicScenario = new Scenario.Builder()
+        .addScene(new Scene("DefaultState")
             .addCommandHandler("/start", reply(startMessage))
             .addCommandHandler("/help", reply(helpMessage))
             .addCommandHandler("/to_second_state",
@@ -30,11 +30,12 @@ class ClassicScenarioTest {
             .addCommandHandler("/testPhoto", ctx -> ctx.sendPhoto(photoURL))
             .addContextHandler(notAnsweredThenCopy())
         )
-        .addState(new State("SecondState")
+        .addScene(new Scene("SecondState")
             .addCommandHandler("/to_default_state",
                 replyAndSetState(secondSwitchMessage, "DefaultState"))
             .addContextHandler(notAnsweredThenCopy())
         )
+        .build()
         .addTransport(testTransport)
         .initWithStore(store);
 

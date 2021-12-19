@@ -16,6 +16,6 @@ public class CommonHandlers {
     }
 
     public static ContextHandler replyAndSetState(String text, String stateName) {
-        return ctx -> ctx.reply(text).setState(stateName);
+        return ctx -> ctx.reply(text).toScene(stateName);
     }
 }
