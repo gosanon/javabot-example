@@ -33,7 +33,7 @@ public class QuizScenarioFactory {
                 .addCommandHandler("/start", reply(START_MESSAGE))
                 .addCommandHandler("/help", reply(HELP_MESSAGE))
                 .addCommandHandler("/quiz",
-                    replyAndSetState("Введите число вопросов", "QuizScenarioFactory preparing")
+                    replyAndSetState("Введите число вопросов", "Quiz preparing")
                 )
                 .addCommandHandler("/leaderboard", reply(quizDB.leaderboard.toString()))
                 .addCommandHandler("/stats",
@@ -41,11 +41,11 @@ public class QuizScenarioFactory {
                 .addContextHandler(notAnsweredThenCopy())
             )
 
-            .addScene(new Scene("QuizScenarioFactory preparing")
+            .addScene(new Scene("Quiz preparing")
                 .addContextHandler(ctx -> quizPreparing(ctx, QuestionsProvider.nextQuestion()))
             )
 
-            .addScene(new Scene("QuizScenarioFactory state")
+            .addScene(new Scene("Quiz state")
                 .addCommandHandler("/exit",
                     replyAndSetState("Отменяем викторину", "Default state")
                 )
