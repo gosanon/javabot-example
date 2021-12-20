@@ -25,6 +25,10 @@ public class RuntimeStore<TUserData> implements IStore<TUserData> {
 
     @Override
     public void resetUserData(String userId) {
+        if (!db.containsKey(userId)) {
+            db.put(userId, DEFAULT_VALUE);
+        }
+
         var userState = getUserState(userId);
         db.put(userId, new CombinedStateRecord<>(userState, DEFAULT_VALUE.getUserData()));
     }
@@ -47,6 +51,10 @@ public class RuntimeStore<TUserData> implements IStore<TUserData> {
 
     @Override
     public void resetUserState(String userId) {
+        if (!db.containsKey(userId)) {
+            db.put(userId, DEFAULT_VALUE);
+        }
+
         var userData = getUserData(userId);
         db.put(userId, new CombinedStateRecord<>(DEFAULT_VALUE.getState(), userData));
     }

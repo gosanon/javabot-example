@@ -26,16 +26,16 @@ class QuizTest {
                 .addCommandHandler("/start", reply(START_MESSAGE))
                 .addCommandHandler("/help", reply(HELP_MESSAGE))
                 .addCommandHandler("/quiz",
-                   replyAndSetState("Введите число вопросов", "Quiz preparing")
+                   replyAndSetState("Введите число вопросов", "QuizScenarioFactory preparing")
                 )
                 .addCommandHandler("/leaderboard", reply(quizDB.leaderboard.toString()))
                 .addContextHandler(notAnsweredThenCopy())
                 )
-            .addScene(new Scene("Quiz preparing")
+            .addScene(new Scene("QuizScenarioFactory preparing")
                 .addContextHandler(ctx -> quizPreparing(ctx, QuestionProviderForTest.nextQuestion()))
             )
 
-            .addScene(new Scene("Quiz state")
+            .addScene(new Scene("QuizScenarioFactory state")
                 .addCommandHandler("/exit",
                    replyAndSetState("Отменяем викторину", "Default state")
                 )
@@ -44,7 +44,8 @@ class QuizTest {
             )
             .build()
             .addTransport(testTransport)
-            .initWithStore(runtimeDb);
+            .setUserStateManager(runtimeDb)
+            .init();
 
     @Test
     public void quizIsAvailable() {

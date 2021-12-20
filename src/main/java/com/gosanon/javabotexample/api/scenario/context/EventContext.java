@@ -5,9 +5,10 @@ import com.gosanon.javabotexample.api.transports.ITransport;
 
 public class EventContext {
     private final ITransport transport;
-    private IUserStateManager store;
+    private IUserStateManager userStateManager;
     public NewMessage newMessage;
 
+    private boolean userStateManagerIsSet = false;
     private boolean alreadyReplied;
 
     public EventContext(ITransport transport, String newMessageText, String newMessageSenderId) {
@@ -28,13 +29,18 @@ public class EventContext {
     }
 
     // I shall think where I should call this.
-    public void setStore(IUserStateManager store) {
-        this.store = store;
+    public void setUserStateManager(IUserStateManager userStateManager) {
+        if (userStateManagerIsSet) {
+            throw new RuntimeException("User state manager already set before!");
+        }
+
+        this.userStateManager = userStateManager;
+        userStateManagerIsSet = true;
     }
 
     public EventContext toScene(String sceneName) {
         var userId = this.newMessage.getSenderId();
-        store.updateUserState(userId, sceneName);
+        userStateManager.updateUserState(userId, sceneName);
         return this;
     }
 

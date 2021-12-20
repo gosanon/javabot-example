@@ -1,5 +1,7 @@
 package com.gosanon.javabotexample.main.quiz;
 
+import com.gosanon.javabotexample.main.quiz.questions.Question;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 

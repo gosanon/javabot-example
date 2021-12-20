@@ -37,7 +37,8 @@ class ClassicScenarioTest {
         )
         .build()
         .addTransport(testTransport)
-        .initWithStore(store);
+        .setUserStateManager(store)
+        .init();
 
     @Test
     public void testWithoutUserMessages() {

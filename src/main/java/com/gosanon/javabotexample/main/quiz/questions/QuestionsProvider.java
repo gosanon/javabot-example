@@ -1,8 +1,9 @@
-package com.gosanon.javabotexample.main.quiz;
+package com.gosanon.javabotexample.main.quiz.questions;
 
 import java.io.*;
 import java.net.URL;
 import com.google.gson.Gson;
+import com.gosanon.javabotexample.main.quiz.questions.Question;
 
 public class QuestionsProvider {
     protected static Question parseData(String data){

@@ -1,4 +1,6 @@
-package com.gosanon.javabotexample.main.quiz;
+package com.gosanon.javabotexample.main.quiz.stats;
+
+import com.gosanon.javabotexample.main.quiz.questions.Question;
 
 public class CurrentQuizStats extends UserQuizStats {
     public final int questionsInQuiz;

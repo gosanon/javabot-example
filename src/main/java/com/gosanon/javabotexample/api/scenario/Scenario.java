@@ -10,6 +10,9 @@ public class Scenario {
     private final HashMap<String, Scene> scenes;
     private final HashMap<String, ContextHandler> scenesHandlers = new HashMap<>();
 
+    private boolean userStateManagerIsSet = false;
+    private IUserStateManager userStateManager;
+
     public ContextHandler complexScenarioHandler = ctx -> ctx;
 
     public Scenario(Builder scenarioBuilderObject) {
@@ -21,16 +24,26 @@ public class Scenario {
         return this;
     }
 
-    public Scenario initWithStore(IUserStateManager store) {
+    public Scenario setUserStateManager(IUserStateManager userStateManager) {
+        if (userStateManagerIsSet) {
+            throw new RuntimeException("User state manager already set before!");
+        }
+
+        userStateManagerIsSet = true;
+        this.userStateManager = userStateManager;
+        return this;
+    }
+
+    public Scenario init() {
         for (String stateName: scenes.keySet()) {
             scenesHandlers.put(stateName, scenes.get(stateName).buildFinalHandler());
         }
 
         complexScenarioHandler = ctx -> {
-            ctx.setStore(store);
+            ctx.setUserStateManager(userStateManager);
 
             String userId = ctx.newMessage.getSenderId();
-            String userState = store.getUserState(userId);
+            String userState = userStateManager.getUserState(userId);
             ContextHandler userStateHandler = scenesHandlers.get(userState);
 
             return userStateHandler.apply(ctx);

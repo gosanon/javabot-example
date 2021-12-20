@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 public class JsonStore<TUserData> extends RuntimeStore<TUserData> {
     protected String filePath;
 
-    JsonStore(String filePath, String defaultState, TUserData defaultRecord) {
+    public JsonStore(String filePath, String defaultState, TUserData defaultRecord) {
         super(defaultState, defaultRecord);
 
         this.filePath = filePath;

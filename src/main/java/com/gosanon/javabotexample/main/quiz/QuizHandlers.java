@@ -1,6 +1,8 @@
 package com.gosanon.javabotexample.main.quiz;
 
 import com.gosanon.javabotexample.api.scenario.context.EventContext;
+import com.gosanon.javabotexample.main.quiz.questions.Question;
+import com.gosanon.javabotexample.main.quiz.stats.CurrentQuizStats;
 
 import static com.gosanon.javabotexample.main.Constants.*;
 
@@ -25,7 +27,7 @@ public class QuizHandlers {
                         .getCurrentQuizStats(ctx.newMessage.getSenderId())
                         .currentQuestion
                         .question)
-                .toScene("Quiz state");
+                .toScene("QuizScenarioFactory state");
         return ctx;
     }
 

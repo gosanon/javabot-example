@@ -2,6 +2,9 @@ package com.gosanon.javabotexample.main.quiz;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.gosanon.javabotexample.main.quiz.stats.CurrentQuizStats;
+import com.gosanon.javabotexample.main.quiz.stats.StatsList;
+import com.gosanon.javabotexample.main.quiz.stats.UserQuizStats;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
