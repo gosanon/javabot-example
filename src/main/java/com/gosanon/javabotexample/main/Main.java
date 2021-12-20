@@ -37,7 +37,7 @@ public class Main {
                 .addCommandHandler("/quiz",
                     replyAndSetState("Введите число вопросов", "Quiz preparing")
                 )
-                .addCommandHandler("/leaderboard", reply(quizDB.leaderboard.toString()))
+                .addCommandHandler("/leaderboard", ctx -> ctx.reply(quizDB.leaderboard.toString()))
                 .addCommandHandler("/stats",
                         ctx -> ctx.reply(quizDB.getOverallStats(ctx.newMessage.getSenderId()).toString()))
                 .addContextHandler(notAnsweredThenCopy())
