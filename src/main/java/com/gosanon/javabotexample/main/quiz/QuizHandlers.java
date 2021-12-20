@@ -1,13 +1,24 @@
 package com.gosanon.javabotexample.main.quiz;
 
+import com.gosanon.javabotexample.api.scenario.context.ContextHandler;
 import com.gosanon.javabotexample.api.scenario.context.EventContext;
+import com.gosanon.javabotexample.main.quiz.QuizDB;
 import com.gosanon.javabotexample.main.quiz.questions.Question;
+import com.gosanon.javabotexample.main.quiz.questions.QuestionsProvider;
 import com.gosanon.javabotexample.main.quiz.stats.CurrentQuizStats;
 
 import static com.gosanon.javabotexample.main.Constants.*;
 
 public class QuizHandlers {
     public static QuizDB quizDB = new QuizDB();
+
+    public static ContextHandler defaultQuizHandler() {
+        return ctx -> quizHandler(ctx, QuestionsProvider.nextQuestion());
+    }
+
+    public static ContextHandler defaultQuizPreparing() {
+        return ctx -> quizPreparing(ctx, QuestionsProvider.nextQuestion());
+    }
 
     public static EventContext quizPreparing(EventContext ctx, Question questionSource){
         var numberOfQuestions = 0;

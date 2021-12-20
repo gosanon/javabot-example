@@ -2,6 +2,7 @@ package com.gosanon.javabotexample.main.quiz;
 
 import com.gosanon.javabotexample.api.scenario.Scenario;
 import com.gosanon.javabotexample.api.scenario.Scene;
+import com.gosanon.javabotexample.api.scenario.context.ContextHandler;
 import com.gosanon.javabotexample.api.store.implementations.JsonStore;
 import com.gosanon.javabotexample.main.quiz.questions.QuestionsProvider;
 import com.gosanon.javabotexample.main.quiz.stats.CurrentQuizStats;
@@ -35,14 +36,14 @@ public class QuizScenarioFactory {
                 .addCommandHandler("/quiz",
                     replyAndSetState("Введите число вопросов", "Quiz preparing")
                 )
-                .addCommandHandler("/leaderboard", reply(quizDB.leaderboard.toString()))
+                .addCommandHandler("/leaderboard", ctx -> ctx.reply(quizDB.leaderboard.toString()))
                 .addCommandHandler("/stats",
                     ctx -> ctx.reply(quizDB.getOverallStats(ctx.newMessage.getSenderId()).toString()))
                 .addContextHandler(notAnsweredThenCopy())
             )
 
             .addScene(new Scene("Quiz preparing")
-                .addContextHandler(ctx -> quizPreparing(ctx, QuestionsProvider.nextQuestion()))
+                .addContextHandler(defaultQuizPreparing())
             )
 
             .addScene(new Scene("Quiz state")
@@ -50,7 +51,7 @@ public class QuizScenarioFactory {
                     replyAndSetState("Отменяем викторину", "Default state")
                 )
                 .addCommandHandler("/help", reply(QUIZ_HELP_MESSAGE))
-                .addContextHandler(ctx -> quizHandler(ctx, QuestionsProvider.nextQuestion()))
+                .addContextHandler(defaultQuizHandler())
             )
 
             // Stop building

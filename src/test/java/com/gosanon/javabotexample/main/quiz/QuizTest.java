@@ -2,6 +2,7 @@ package com.gosanon.javabotexample.main.quiz;
 
 import com.gosanon.javabotexample.api.scenario.Scene;
 import com.gosanon.javabotexample.api.scenario.Scenario;
+import com.gosanon.javabotexample.api.scenario.context.ContextHandler;
 import com.gosanon.javabotexample.api.store.IUserStateManager;
 import com.gosanon.javabotexample.api.store.implementations.RuntimeStateManager;
 import com.gosanon.javabotexample.transports.implementations.TestStringTransport;
@@ -28,11 +29,11 @@ class QuizTest {
                 .addCommandHandler("/quiz",
                    replyAndSetState("Введите число вопросов", "QuizScenarioFactory preparing")
                 )
-                .addCommandHandler("/leaderboard", reply(quizDB.leaderboard.toString()))
+                .addCommandHandler("/leaderboard", ctx -> ctx.reply(quizDB.leaderboard.toString()))
                 .addContextHandler(notAnsweredThenCopy())
                 )
             .addScene(new Scene("QuizScenarioFactory preparing")
-                .addContextHandler(ctx -> quizPreparing(ctx, QuestionProviderForTest.nextQuestion()))
+                .addContextHandler(testQuizHPreparing())
             )
 
             .addScene(new Scene("QuizScenarioFactory state")
@@ -40,12 +41,21 @@ class QuizTest {
                    replyAndSetState("Отменяем викторину", "Default state")
                 )
                 .addCommandHandler("/help", reply(QUIZ_HELP_MESSAGE))
-                .addContextHandler(ctx -> quizHandler(ctx, QuestionProviderForTest.nextQuestion()))
+                .addContextHandler(testQuizHandler())
             )
             .build()
             .addTransport(testTransport)
             .setUserStateManager(runtimeDb)
             .init();
+
+
+    public static ContextHandler testQuizHandler() {
+        return ctx -> quizHandler(ctx, QuestionProviderForTest.nextQuestion());
+    }
+
+    public static ContextHandler testQuizHPreparing() {
+        return ctx -> quizPreparing(ctx, QuestionProviderForTest.nextQuestion());
+    }
 
     @Test
     public void quizIsAvailable() {
