@@ -4,16 +4,16 @@ import com.gosanon.javabotexample.api.store.IUserDataStorage;
 
 import java.util.HashMap;
 
-public class RuntimeDataStorage<TUserRecord> implements IUserDataStorage<TUserRecord> {
-    TUserRecord DEFAULT_VALUE;
-    private final HashMap<String, TUserRecord> db = new HashMap<>();
+public class RuntimeDataStorage<TUserData> implements IUserDataStorage<TUserData> {
+    TUserData DEFAULT_VALUE;
+    private final HashMap<String, TUserData> db = new HashMap<>();
 
-    RuntimeDataStorage(TUserRecord defaultUserRecord) {
+    RuntimeDataStorage(TUserData defaultUserRecord) {
         this.DEFAULT_VALUE = defaultUserRecord;
     }
 
     @Override
-    public TUserRecord getUserData(String userId) {
+    public TUserData getUserData(String userId) {
         if (db.containsKey(userId)) {
             return db.get(userId);
         }
@@ -28,7 +28,7 @@ public class RuntimeDataStorage<TUserRecord> implements IUserDataStorage<TUserRe
     }
 
     @Override
-    public void updateUserData(String userId, TUserRecord userData) {
+    public void updateUserData(String userId, TUserData userData) {
         db.put(userId, userData);
     }
 }

@@ -12,6 +12,7 @@ public class RuntimeStateManager implements IUserStateManager {
         this.DEFAULT_VALUE = defaultValue;
     }
 
+    @Override
     public String getUserState(String userId) {
         if (db.containsKey(userId)) {
             return db.get(userId);
@@ -21,10 +22,12 @@ public class RuntimeStateManager implements IUserStateManager {
         return db.get(userId);
     }
 
+    @Override
     public void resetUserState(String userId) {
         db.put(userId, DEFAULT_VALUE);
     }
 
+    @Override
     public void updateUserState(String userId, String stateName) {
         db.put(userId, stateName);
     }

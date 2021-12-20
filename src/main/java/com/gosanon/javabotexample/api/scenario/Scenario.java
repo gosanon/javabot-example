@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Scenario {
     private final HashMap<String, Scene> scenes;
-    private HashMap<String, ContextHandler> scenesHandlers;
+    private final HashMap<String, ContextHandler> scenesHandlers = new HashMap<>();
 
     public ContextHandler complexScenarioHandler = ctx -> ctx;
 

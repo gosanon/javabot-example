@@ -1,44 +1,72 @@
 package com.gosanon.javabotexample.api.store.implementations;
 
+import com.gosanon.javabotexample.api.store.CombinedStateRecord;
 import com.gosanon.javabotexample.api.store.IStore;
 
-public class RuntimeStore<TUserRecord> implements IStore<TUserRecord> {
-    RuntimeDataStorage<TUserRecord> runtimeDataStorage;
-    RuntimeStateManager runtimeStateManager;
+import java.util.HashMap;
 
-    public RuntimeStore(String defaultState, TUserRecord defaultUserRecord) {
-        this.runtimeDataStorage = new RuntimeDataStorage<>(defaultUserRecord);
-        this.runtimeStateManager = new RuntimeStateManager(defaultState);
+public class RuntimeStore<TUserData> implements IStore<TUserData> {
+    private final CombinedStateRecord<TUserData> DEFAULT_VALUE;
+    protected final HashMap<String, CombinedStateRecord<TUserData>> db = new HashMap<>();
+
+    public RuntimeStore(String defaultState, TUserData defaultUserRecord) {
+        DEFAULT_VALUE = new CombinedStateRecord<>(defaultState, defaultUserRecord);
     }
 
     @Override
-    public String getUserState(String userId) {
-        return runtimeStateManager.getUserState(userId);
-    }
+    public TUserData getUserData(String userId) {
+        if (db.containsKey(userId)) {
+            return db.get(userId).getUserData();
+        }
 
-    @Override
-    public void resetUserState(String userId) {
-        runtimeStateManager.resetUserState(userId);
-    }
-
-    @Override
-    public void updateUserState(String userId, String stateName) {
-        runtimeStateManager.updateUserState(userId, stateName);
-    }
-
-    @Override
-    public TUserRecord getUserData(String userId) {
-        return runtimeDataStorage.getUserData(userId);
+        resetUserData(userId);
+        return db.get(userId).getUserData();
     }
 
     @Override
     public void resetUserData(String userId) {
-        runtimeDataStorage.resetUserData(userId);
+        var userState = getUserState(userId);
+        db.put(userId, new CombinedStateRecord<>(userState, DEFAULT_VALUE.getUserData()));
     }
 
     @Override
-    public void updateUserData(String userId, TUserRecord userData) {
-        runtimeDataStorage.updateUserData(userId, userData);
+    public void updateUserData(String userId, TUserData userData) {
+        var userState = getUserState(userId);
+        db.put(userId, new CombinedStateRecord<>(userState, userData));
+    }
+
+    @Override
+    public String getUserState(String userId) {
+        if (db.containsKey(userId)) {
+            return db.get(userId).getState();
+        }
+
+        resetUserState(userId);
+        return db.get(userId).getState();
+    }
+
+    @Override
+    public void resetUserState(String userId) {
+        var userData = getUserData(userId);
+        db.put(userId, new CombinedStateRecord<>(DEFAULT_VALUE.getState(), userData));
+    }
+
+    @Override
+    public void updateUserState(String userId, String stateName) {
+        var userData = getUserData(userId);
+        db.put(userId, new CombinedStateRecord<>(stateName, userData));
+    }
+
+    CombinedStateRecord<TUserData> getCombinedUserRecord(String userId) {
+        return db.get(userId);
+    }
+
+    void resetCombinedUserRecord(String userId) {
+        db.put(userId, DEFAULT_VALUE);
+    }
+
+    void updateCombinedUserRecord(String userId, CombinedStateRecord<TUserData> newValue) {
+        db.put(userId, newValue);
     }
 }
 
