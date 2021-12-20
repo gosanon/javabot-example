@@ -12,8 +12,7 @@ public class UserQuizStats {
         this.score = 0;
     }
 
-    public UserQuizStats(int answeredQuestionsNumber,
-                         int correctAnswerNumber, int score) {
+    public UserQuizStats(int answeredQuestionsNumber, int correctAnswerNumber, int score) {
         this.answeredQuestionsNumber = answeredQuestionsNumber;
         this.correctAnswerNumber = correctAnswerNumber;
         this.score = score;
@@ -21,17 +20,17 @@ public class UserQuizStats {
 
     public String toString(){
         return String.format(
-                """
-                        Вопросов сыграно: %d
-                        Правильных ответов: %d
-                        Очков набрано: %d""",
-                this.answeredQuestionsNumber, this.correctAnswerNumber, this.score);
+            """
+                Вопросов сыграно: %d
+                Правильных ответов: %d
+                Очков набрано: %d""",
+            this.answeredQuestionsNumber, this.correctAnswerNumber, this.score);
     }
 
     public UserQuizStats updateStatsWith(UserQuizStats statsSource){
         return new UserQuizStats(
-                this.answeredQuestionsNumber + statsSource.answeredQuestionsNumber,
-                this.correctAnswerNumber + statsSource.correctAnswerNumber,
-                this.score + statsSource.score);
+            this.answeredQuestionsNumber + statsSource.answeredQuestionsNumber,
+            this.correctAnswerNumber + statsSource.correctAnswerNumber,
+            this.score + statsSource.score);
     }
 }
