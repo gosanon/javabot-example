@@ -2,7 +2,6 @@ package com.gosanon.javabotexample.api.store.implementations;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.gosanon.javabotexample.api.store.CombinedStateRecord;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -10,7 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 
 public class JsonStore<TUserData> extends RuntimeStore<TUserData> {
     protected String filePath;
