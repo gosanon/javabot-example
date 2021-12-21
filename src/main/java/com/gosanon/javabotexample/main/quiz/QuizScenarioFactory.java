@@ -19,22 +19,21 @@ public class QuizScenarioFactory {
         }
 
         // Constants
-        String defaultStateName = "Default state";
 
         // Store
-        var jsonStore = new JsonStore<>("./QuizDB.json", defaultStateName,
+        var jsonStore = new JsonStore<>("./QuizDB.json", DEFAULT_STATE,
             new StatsList(new CurrentQuizStats()));
 
         return new Scenario.Builder()
 
             // Add states
-            .addScene(new Scene("Default state")
+            .addScene(new Scene(DEFAULT_STATE)
 
                 // Add handlers
                 .addCommandHandler("/start", reply(START_MESSAGE))
                 .addCommandHandler("/help", reply(HELP_MESSAGE))
                 .addCommandHandler("/quiz",
-                    replyAndSetState("Введите число вопросов", "Quiz preparing")
+                    replyAndSetState("Введите число вопросов", QUIZ_PREPARING_STATE)
                 )
                 .addCommandHandler("/leaderboard", ctx -> ctx.reply(quizDB.leaderboard.toString()))
                 .addCommandHandler("/stats",
@@ -42,13 +41,13 @@ public class QuizScenarioFactory {
                 .addContextHandler(notAnsweredThenCopy())
             )
 
-            .addScene(new Scene("Quiz preparing")
+            .addScene(new Scene(QUIZ_PREPARING_STATE)
                 .addContextHandler(defaultQuizPreparing())
             )
 
-            .addScene(new Scene("Quiz state")
+            .addScene(new Scene(QUIZ_STATE)
                 .addCommandHandler("/exit",
-                    replyAndSetState("Отменяем викторину", "Default state")
+                    replyAndSetState("Отменяем викторину", DEFAULT_STATE)
                 )
                 .addCommandHandler("/help", reply(QUIZ_HELP_MESSAGE))
                 .addContextHandler(defaultQuizHandler())

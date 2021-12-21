@@ -39,4 +39,10 @@ public class Constants {
                                 Неправильно. Правильный ответ: %s%n
                                 """;
     public static final String CORRECT_ANSWER_MESSAGE = "Правильно!\n";
+
+    public static final String DEFAULT_STATE = "Default state";
+
+    public static final String QUIZ_PREPARING_STATE = "Quiz preparing";
+
+    public static final String QUIZ_STATE = "Quiz state";
 }

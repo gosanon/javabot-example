@@ -38,7 +38,7 @@ public class QuizHandlers {
                         .getCurrentQuizStats(ctx.newMessage.getSenderId())
                         .currentQuestion
                         .question)
-                .toScene("QuizScenarioFactory state");
+                .toScene("Quiz state");
         return ctx;
     }
 

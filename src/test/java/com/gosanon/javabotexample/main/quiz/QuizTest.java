@@ -19,26 +19,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuizTest {
-    String defaultStateName = "Default state";
-    IUserStateManager runtimeDb = new RuntimeStateManager(defaultStateName);
+    IUserStateManager runtimeDb = new RuntimeStateManager(DEFAULT_STATE);
     TestStringTransport testTransport = new TestStringTransport();
     Scenario scenario = new Scenario.Builder()
-            .addScene(new Scene("Default state")
+            .addScene(new Scene(DEFAULT_STATE)
                 .addCommandHandler("/start", reply(START_MESSAGE))
                 .addCommandHandler("/help", reply(HELP_MESSAGE))
                 .addCommandHandler("/quiz",
-                   replyAndSetState("Введите число вопросов", "QuizScenarioFactory preparing")
+                   replyAndSetState("Введите число вопросов", QUIZ_PREPARING_STATE)
                 )
                 .addCommandHandler("/leaderboard", ctx -> ctx.reply(quizDB.leaderboard.toString()))
                 .addContextHandler(notAnsweredThenCopy())
                 )
-            .addScene(new Scene("QuizScenarioFactory preparing")
+            .addScene(new Scene(QUIZ_PREPARING_STATE)
                 .addContextHandler(testQuizHPreparing())
             )
 
-            .addScene(new Scene("QuizScenarioFactory state")
+            .addScene(new Scene(QUIZ_STATE)
                 .addCommandHandler("/exit",
-                   replyAndSetState("Отменяем викторину", "Default state")
+                   replyAndSetState("Отменяем викторину", DEFAULT_STATE)
                 )
                 .addCommandHandler("/help", reply(QUIZ_HELP_MESSAGE))
                 .addContextHandler(testQuizHandler())
