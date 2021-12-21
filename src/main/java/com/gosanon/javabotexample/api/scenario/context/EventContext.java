@@ -5,6 +5,11 @@ import com.gosanon.javabotexample.api.transports.ITransport;
 
 public class EventContext {
     private final ITransport transport;
+
+    public IUserStateManager getUserStateManager() {
+        return userStateManager;
+    }
+
     private IUserStateManager userStateManager;
     public NewMessage newMessage;
 

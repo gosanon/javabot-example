@@ -20,6 +20,14 @@ public class QuizHandlers {
         return ctx -> quizPreparing(ctx, QuestionsProvider.nextQuestion());
     }
 
+    public static ContextHandler getStatsHandler() {
+        return ctx -> ctx.reply(quizDB.getOverallStats(ctx.newMessage.getSenderId()).toString());
+    }
+
+    public static ContextHandler getLeaderboardHandler() {
+        return ctx -> ctx.reply(quizDB.leaderboard.toString());
+    }
+
     public static EventContext quizPreparing(EventContext ctx, Question questionSource){
         var numberOfQuestions = 0;
         var startMessage = "Начинаем викторину.\n\n";
