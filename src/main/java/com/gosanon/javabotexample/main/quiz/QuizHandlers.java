@@ -38,7 +38,7 @@ public class QuizHandlers {
                         .getCurrentQuizStats(ctx.newMessage.getSenderId())
                         .currentQuestion
                         .question)
-                .toScene("Quiz state");
+                .toScene(QUIZ_STATE);
         return ctx;
     }
 
@@ -50,7 +50,7 @@ public class QuizHandlers {
             var userStats = quizDB.getCurrentQuizStats(userId);
             if (userStats.questionsInQuiz == userStats.answeredQuestionsNumber){
                 ctx.reply(String.format(QUIZ_PASS_MESSAGE, messageAboutUserAnswer, userStats))
-                        .toScene("Default state")
+                        .toScene(DEFAULT_STATE)
                         .sendPhoto(QUIZ_PASS_IMAGE_URL);
                 quizDB.updateUserStats(userId);
             }
