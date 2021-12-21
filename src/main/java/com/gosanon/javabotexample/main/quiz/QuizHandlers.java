@@ -84,9 +84,9 @@ public class QuizHandlers {
             result = CORRECT_ANSWER_MESSAGE;
         }
         else result = String.format(WRONG_ANSWER_MESSAGE, correctAnswer);
-        var a = new CurrentQuizStats(
+        var updatedQuizStats = new CurrentQuizStats(
                 questionNumber, answeredQuestionsNumber, correctAnswerNumber, score, questionSource);
-        quizDB.putRecord(userId, a);
+        quizDB.putRecord(userId, updatedQuizStats);
         return result;
     }
 }
